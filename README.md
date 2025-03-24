@@ -37,6 +37,7 @@ Pour en savoir plus et consulter l’ensemble de la documentation sous forme de 
 
 5. **R for Data Science** (Hadley Wickham, Garrett Grolemund)  
    - Pour approfondir l’analyse de données avec R.
+---
 
 - **Auteurs :** [__**Papa Amadou NIANG**__](https://github.com/PapaAmad) & [__**Albert ZINABA**__](https://github.com/ZINABA-Albert)
 - **Encadrant :** [__**M. Aboubacar HEMA**__](https://github.com/Abson-dev)
