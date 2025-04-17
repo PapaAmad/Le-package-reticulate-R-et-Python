@@ -1,0 +1,28 @@
+--- 
+title: "Le package reticulate : R et Python"
+author: "Albert ZINABA & Papa Amadou NIANG"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+site: bookdown::bookdown_site
+# documentclass: book
+# bibliography: [book.bib, packages.bib]
+# url: your book url like https://bookdown.org/yihui/bookdown
+cover-image: reticulated_python.png
+description: |
+  This is a minimal example of using the bookdown package to write a book.
+  The HTML output format for this example is bookdown::gitbook,
+  set in the _output.yml file.
+# link-citations: yes
+# github-repo: rstudio/bookdown-demo
+---
+
+# Introduction à **reticulate** et son rôle dans l’écosystème R {-}
+
+Le package **reticulate** est un outil qui permet d’appeler du code Python directement depuis R, créant ainsi un pont entre les deux langages. Comme le décrit sa documentation officielle, *« The package enables you to reticulate Python code into R, creating a new breed of project that weaves together the two languages »*. En d’autres termes, **reticulate** fournit une panoplie d’outils pour faire interagir R et Python de manière fluide au sein d’une même session R. Ceci ouvre la voie à une **interopérabilité complète** entre ces deux écosystèmes de programmation, permettant aux utilisateurs de combiner les points forts de chacun.
+
+## Pourquoi R et Python ensemble ?
+
+R est réputé pour ses capacités statistiques et de visualisation, tandis que Python excelle dans des domaines comme le web scraping, le machine learning ou l’automatisation. Plutôt que de choisir l’un ou l’autre, **reticulate** offre la possibilité d’utiliser **simultanément R et Python** dans un même projet. Par exemple, un analyste R peut exploiter une librairie Python inexistante en R sans quitter son environnement R. De même, des données manipulées en R peuvent être passées à une fonction Python pour un traitement spécifique, puis les résultats ramenés en R. Ce genre d’intégration était autrefois fastidieux (il fallait écrire des fichiers intermédiaires, utiliser des APIs externes ou des appels système), mais **reticulate** simplifie radicalement le processus en intégrant un *interpréteur Python “vivant”* à l’intérieur de R.
+
+## Place dans l’écosystème R
+
+Reticulate a été développé par RStudio (désormais Posit) et s’est imposé comme la solution de référence pour la collaboration entre R et Python. Il est à la base de nombreuses autres initiatives d’intégration, par exemple : les documents R Markdown peuvent inclure des chunks de code Python grâce à reticulate, et des packages R comme **keras** ou **tensorflow** (interfaces R pour ces frameworks de deep learning) utilisent **reticulate** en coulisses pour appeler les bibliothèques Python correspondantes. En somme, **reticulate** est devenu un composant clé pour tous ceux qui souhaitent un workflow bilingue R-Python sans couture.

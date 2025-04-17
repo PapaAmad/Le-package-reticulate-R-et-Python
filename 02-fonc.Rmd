@@ -1,0 +1,85 @@
+# Fonctionnalités principales de **reticulate**
+
+Une fois configuré, **reticulate** permet une véritable **interopérabilité R-Python**. Voici les principales fonctionnalités offertes et comment les utiliser.
+
+## Appeler des fonctions Python depuis R
+
+La fonctionnalité de base de **reticulate** est d’appeler des modules, fonctions ou classes Python comme si c’étaient des objets R. Pour ce faire, on utilise généralement la fonction `import()` de **reticulate** afin de charger un module Python. Cette fonction fonctionne de façon analogue à l’instruction `import` en Python, mais elle renvoie un objet R représentant le module Python importé.
+
+Par exemple, pour importer le module Python **math** et utiliser sa fonction `sqrt` depuis R :
+
+```{r}
+math <- import("math")       # importe le module Python "math"
+math$sqrt(9)                # appelle math.sqrt(9) en Python
+```
+
+Ici, `math` est un objet R qui référence le module Python. On peut appeler la fonction `sqrt` avec la syntaxe `$` comme s’il s’agissait d’une liste ou d’un objet R, mais en réalité l’appel est exécuté par l’interpréteur Python en arrière-plan. **Reticulate** gère automatiquement le passage de l’argument (`9` de R vers Python) et le retour du résultat (`3` de Python vers R).
+
+On peut de la même manière importer des **packages Python** plus complexes. Par exemple, importons le package **numpy** (couramment utilisé pour le calcul numérique en Python) et utilisons-le :
+
+```{r}
+np <- import("numpy")
+arr <- np$array(c(1, 2, 3, 4))    # crée un numpy array à partir d’un vecteur R
+np$mean(arr)                     # calcule la moyenne via numpy
+```
+
+Dans cet exemple, le vecteur R `c(1,2,3,4)` a été converti en un tableau numpy, puis la fonction `mean` de numpy a opéré dessus. **Reticulate** rend ces interactions quasi transparentes. En fait, **lorsqu’on appelle Python depuis R, les types de données R sont convertis automatiquement en types Python équivalents, et vice-versa lors du retour**. 
+
+## Conversion automatique des types de données
+
+Ce mécanisme de conversion de type est central dans **reticulate**, car il permet d’échanger des données entre R et Python sans effort manuel la plupart du temps. Le tableau ci-dessous résume quelques conversions automatiques courantes effectuées par reticulate :
+
+| Type R                        | Converti en type Python         | Exemple (R → Python)                       |
+|-------------------------------|---------------------------------|--------------------------------------------|
+| Vecteur atomique (1 élément)  | Scalaire Python                 | `42` (numérique R) devient `42` (int/float Python) |
+| Vecteur atomique (plusieurs éléments) ou liste non nommée | **list** Python            | `c(1, 2, 3)` (vecteur R) devient `[1, 2, 3]` (list Python) |
+| Liste nommée                  | **dict** Python                 | `list(a=1, b=2)` devient `{'a': 1, 'b': 2}` |
+| Matrice ou tableau (*matrix/array*) | **numpy.ndarray**           | `matrix(1:4, ncol=2)` devient un ndarray 2x2 |
+| Data frame                    | **pandas.DataFrame**            | `data.frame(x=1:3, y=c("a","b","c"))` devient un DataFrame pandas |
+| Fonction R                    | **function** Python (appelable) | `function(x) x+1` devient une fonction Python équivalente |
+| `NULL`, `TRUE`, `FALSE`       | `None`, `True`, `False`         | `NULL` (R) devient `None` (Python), etc.   |
+
+*Tableau : Correspondances automatiques de quelques types R ↔ Python avec reticulate.*
+Lorsqu’une valeur Python d’un type inconnu (classe personnalisée) est renvoyée vers R, **reticulate** ne la convertit pas en un type R arbitraire mais fournit une **référence** à l’objet Python. Vous pourrez alors manipuler cet objet en R (appeler ses méthodes, accéder à ses attributs) comme s’il s’agissait d’une instance R, tant que l’objet Python sous-jacent existe.
+
+Il est également possible de forcer des conversions ou de faire des conversions manuelles si besoin, via par exemple les fonctions `r_to_py()` (convertir un objet R en objet Python explicitement) et `py_to_r()` (l’inverse). Dans la grande majorité des cas, reticulate gère tout cela automatiquement, mais ces fonctions peuvent être utiles pour affiner le comportement, notamment si on souhaite désactiver la conversion automatique sur un objet (on peut importer un module avec `convert = FALSE` pour obtenir des objets Python "bruts" manipulables manuellement).
+
+## Échange de variables entre R et Python
+
+En plus d’appeler directement des fonctions, **reticulate** permet de partager des variables entre les deux langages. Deux approches existent :
+
+- **Utiliser le pseudo-objet `py` en R** : Toutes les variables Python créées lors d’appels via reticulate sont accessibles en R via l’objet spécial `py`. Par exemple, si en Python on assigne une valeur à une variable nommée `foo`, on pourra y accéder en R avec `py$foo`. Inversement, côté Python, un objet spécial `r` permet d’accéder aux objets R. Par exemple, `r.bar` en Python fera référence à la variable R nommée `bar`. 
+
+Pour illustrer, on peut exécuter du code Python arbitraire avec `py_run_string()` ou `py_run_file()`. Supposons qu’on veuille exécuter un petit script Python qui utilise une variable R :
+
+```{r}
+x <- 42  # une variable R
+py_run_string("y = r.x + 1")  # exécute du Python: y = x de R + 1
+py$y
+```
+
+Dans ce snippet, on a utilisé `r.x` dans le code Python pour accéder à la variable R `x`. Le script Python a créé une variable `y`, qu’on retrouve ensuite en R via `py$y`. Ce mécanisme est très pratique pour orchestrer des échanges complexes sans avoir à gérer manuellement des fichiers ou des sorties : tout se passe en mémoire partagée.
+
+- **Sourcing de code Python avec retour de variables** : Une autre manière est d’utiliser `source_python("script.py")` pour exécuter un fichier Python. Toutes les fonctions et classes définies dans ce fichier deviennent directement disponibles en R comme si c’étaient des fonctions R. Par exemple, si le fichier `script.py` contient une fonction `def foo(x): return x*2`, alors après `source_python("script.py")`, on pourra appeler `foo(21)` dans R et obtenir 42 en résultat. De même, les variables globales créées dans le script Python pourront être accessibles via `py$...` en R. Le `source_python()` agit en quelque sorte comme le `source()` de R, mais pour Python.
+
+## Exécution de scripts Python et sessions interactives
+
+Outre `source_python()` et `py_run_string()`, reticulate offre d’autres outils pour exécuter du code Python :
+
+- **`py_run_file("fichier.py")`** : similaire à `source_python()`, à la différence qu’il ne crée pas de fonctions R. Il exécute le script Python donné et retourne un dictionnaire contenant les variables globales du script. C’est utile si l’on souhaite isoler l’exécution et récupérer manuellement certains résultats.
+
+- **Python interactif dans la console R** : La fonction `repl_python()` ouvre un interpréteur Python interactif *au sein* de la session R. Vous vous retrouvez alors avec une invite Python (`>>>`) dans la console, comme si vous étiez dans un terminal Python classique, mais toujours dans RStudio ou votre R console. Vous pouvez y taper des commandes Python interactives. Pour revenir à R, il suffit de taper `exit` ou `quit()`. Ce mode est pratique pour tester rapidement du code Python sans quitter R. De plus, les objets créés sont persistants dans la session **reticulate**, donc accessibles ensuite via `py$` en R une fois que vous quittez le REPL Python.
+
+- **R Markdown et notebooks** : Bien que ce ne soit pas une fonction du package en soi, il faut noter que reticulate s’intègre avec R Markdown. Vous pouvez inclure des chunks Python (````{python} ... ````) dans un document R Markdown, et grâce à reticulate, ces chunks pourront partager leurs variables avec les chunks R. Par exemple, une variable Python définie dans un chunk pourra être récupérée dans un chunk R suivant via `py$var`. Cette interopérabilité rend les notebooks multi-langages très puissants pour la data science.
+
+## Interopérabilité avancée et limitations
+
+**Reticulate** supporte la plupart des cas d’usage courants, mais il est utile de connaître quelques détails supplémentaires :
+
+- **Appels de méthodes et attributs Python** : Si vous importez une classe ou créez un objet Python en R, vous pouvez appeler ses méthodes via `$`. Par exemple `obj$method(arg)` appellera `obj.method(arg)` en Python. Les attributs se récupèrent de la même façon (`obj$attribute`). S’il y a un nom qui entre en conflit avec un nom de fonction R (par exemple une méthode nommée `print`), vous pouvez utiliser la syntaxe `obj[[\"print\"]]()`.
+
+- **Conversion fine des types** : Par défaut, la conversion automatique peut être désactivée en important un module avec `convert = FALSE`. Dans ce cas, les objets Python retournés restent des références Python (classe `py_object`). On peut les manipuler seulement via Python. Il faut alors utiliser `py_to_r()` manuellement pour convertir un résultat quand on le souhaite. Cette approche est utile si la conversion automatique pose problème (cas de types non standard ou lorsque l’on souhaite vraiment garder l’objet Python natif).
+
+- **Limitations** : Tout ce qui est fait via **reticulate** s’exécute dans un seul interpréteur Python par session R. Cela signifie que vous **ne pouvez pas** simultanément faire tourner deux environnements Python isolés dans un même processus R. Par exemple, vous ne pouvez pas importer deux versions différentes d’une même librairie Python dans une session R donnée. De plus, certaines fonctionnalités Python qui requièrent un vrai interpréteur interactif (par ex. les boucles d’événements async, ou des interfaces graphiques tkinter, etc.) pourraient ne pas fonctionner correctement à travers reticulate, surtout dans un environnement non interactif. Néanmoins, pour l’écrasante majorité des bibliothèques Python orientées calcul, traitement de données, web, etc., **reticulate** fonctionne parfaitement.
+
+En résumé, **reticulate** rend possible l’utilisation conjointe de R et Python de façon transparente. Après avoir configuré Python, vous pouvez importer des modules, appeler des fonctions, passer des données d’un langage à l’autre, exécuter des scripts complets, et même interagir avec Python directement dans R. Nous allons maintenant voir quels avantages pratiques on peut en tirer et présenter des cas d’usage typiques.

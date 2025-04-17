@@ -1,0 +1,377 @@
+/* Variables */
+:root {
+  --primary-color: #1a73e8;
+  --primary-dark: #0d47a1;
+  --primary-light: #e8f0fe;
+  --text-color: #202124;
+  --bg-color: #fff;
+  --sidebar-width: 300px;
+  --header-height: 70px;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --accent-color: #fbbc04;
+  --code-bg: #f8f9fa;
+}
+
+/* Reset & base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  line-height: 1.7;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  font-size: 16px;
+}
+
+/* Book layout */
+.book {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar styles */
+.book-sidebar {
+  width: var(--sidebar-width);
+  background: linear-gradient(145deg, var(--primary-color), var(--primary-dark));
+  color: #fff;
+  padding: 2rem;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  box-shadow: var(--box-shadow);
+  z-index: 100;
+}
+
+.book-brand {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.book-brand a {
+  color: #fff;
+  font-size: 1.6rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(120deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.9) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.book-brand a:hover {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  transform: scale(1.02);
+}
+
+.chapters-header {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.book-chapters ul {
+  list-style: none;
+}
+
+.book-chapters li {
+  margin: 0.5rem 0;
+}
+
+.book-chapters a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  transition: all 0.2s;
+  display: block;
+  padding: 0.5rem 0;
+}
+
+.book-chapters a:hover {
+  color: #fff;
+  transform: translateX(3px);
+}
+
+.chapter.active > a {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Boutons de basculement pour les sous-chapitres */
+.chapter {
+  position: relative;
+}
+
+.chapter > a {
+  padding-right: 25px;
+}
+
+.chapter > a::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.chapter.active > a::after {
+  content: '−';
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(0deg);
+}
+
+/* Main content */
+.book-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 3rem 5rem;
+  max-width: 950px;
+  line-height: 1.8;
+  background: linear-gradient(to bottom, #ffffff, #f8fafd);
+  min-height: 100vh;
+}
+
+.book-header {
+  margin-bottom: 4rem;
+  padding-bottom: 2rem;
+  border-bottom: 3px solid var(--primary-light);
+  position: relative;
+}
+
+.book-header:after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100px;
+  height: 3px;
+  background: var(--primary-color);
+}
+
+.book-header h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-dark);
+  letter-spacing: -0.5px;
+  position: relative;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  animation: shimmer 5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.book-info {
+  color: #78909c;
+  font-size: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.book-author, .book-date {
+  margin-right: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.book-author:before {
+  content: '\f0c0';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+.book-date:before {
+  content: '\f073';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Typographie */
+h1, h2, h3 {
+  color: var(--primary-dark);
+  margin: 2.5rem 0 1.5rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.9rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--primary-light);
+  position: relative;
+}
+
+h2:after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--primary-color);
+}
+
+h3 {
+  font-size: 1.4rem;
+}
+
+p {
+  margin-bottom: 1.5rem;
+  line-height: 2.0;
+}
+
+code {
+  background: var(--code-bg);
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'Consolas', monospace;
+  color: var(--primary-dark);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* --- Blocs de code avec bouton Copier --- */
+pre {
+  position: relative;
+  background: var(--code-bg);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+pre:hover .copy-btn {
+  opacity: 1;
+}
+
+/* --- Tableaux stylisés --- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  box-shadow: var(--box-shadow);
+  overflow-x: auto;
+}
+
+table thead {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+table th,
+table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+table tr:nth-child(even) {
+  background-color: var(--primary-light);
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+/* Conteneur pour le titre et l'image dans l'en-tête */
+.header-title-img {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-image {
+  max-height: 110px;
+  margin-left: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .book-sidebar {
+    width: 260px;
+  }
+  .book-main {
+    margin-left: 260px;
+    padding: 2rem 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .book-main {
+    margin-left: 0;
+    padding: 1.5rem;
+  }
+  .book-sidebar.active {
+    transform: translateX(0);
+  }
+}
+
+/* Print styles */
+@media print {
+  .book-sidebar {
+    display: none;
+  }
+  .book-main {
+    margin-left: 0;
+  }
+}

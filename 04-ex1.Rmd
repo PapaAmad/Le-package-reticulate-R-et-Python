@@ -1,0 +1,174 @@
+# Exemple pratique : Scraping web
+
+Pour bien comprendre comment utiliser **reticulate** pas à pas, prenons un exemple concret et réaliste. Supposons que nous souhaitions extraire des données à partir d’un site web en “temps réel” (c’est-à-dire des données mises à jour dynamiquement). Le site [**Worldometers**](https://www.worldometers.info) fournit par exemple des statistiques mondiales en direct. Nous allons montrer comment, grâce à **reticulate**, on peut écrire un script R qui utilise Python pour faire du **web scraping** (extraction de données web) et ensuite exploiter ces données dans R (par exemple pour les visualiser).
+
+**Cas d’étude :** Récupérer la liste des pays du monde et leur population actuelle depuis Worldometers, puis afficher les 10 pays les plus peuplés dans un graphique, en combinant Python et R.
+
+Pour cela, nous aurons besoin côté Python des librairies **requests** (pour télécharger le contenu HTML de la page) et **BeautifulSoup** (module **bs4**, pour parser le HTML et extraire les données). Côté R, nous utiliserons les fonctions de **reticulate** pour orchestrer Python, et les fonctions R de base pour manipuler et visualiser les données.
+
+## Préparation de l’environnement Python dans R
+
+Tout d’abord, assurons-nous que les librairies Python nécessaires sont disponibles. Si ce n’est pas déjà fait, on peut installer `requests` et `beautifulsoup4` via **reticulate**. Nous supposons ici que vous avez configuré un environnement Python (par exemple via `install_miniconda()` comme vu précédemment). Dans le doute, installons ces packages :
+
+```{r eval=FALSE}
+py_install(c("requests", "beautifulsoup4"))
+```
+
+Cette commande va installer les deux librairies Python dans l’environnement actuellement utilisé par reticulate. (Si elles sont déjà installées, elle n’aura pas d’effet ou vous pouvez la sauter.)
+
+Ensuite, importons ces modules Python pour pouvoir les utiliser :
+
+```{r}
+requests <- import("requests")      # importe la librairie requests
+bs4      <- import("bs4")           # importe BeautifulSoup (bs4)
+builtins <- import_builtins()       # importe les fonctions de base de python
+```
+
+Ici, `requests`, `bs4` et `builtins` deviennent trois objets R représentant les modules Python correspondants. On pourra appeler leurs fonctions avec la syntaxe `$`. Par exemple, `requests$get()` pour faire une requête web, `bs4$BeautifulSoup()` pour parser du HTML, ou `builtins$len()` pour utiliser des fonctions de base du langage Python.
+
+## Récupération du contenu HTML de la page cible
+
+Identifions l’URL à scraper. Sur Worldometers, il existe une page listant les pays et leur population : [**link to the page**](https://www.worldometers.info/geography/countries-of-the-world/). C’est cette page que nous allons télécharger.
+
+On utilise `requests` pour faire une requête GET et obtenir le HTML :
+
+```{r}
+url <- "https://www.worldometers.info/geography/countries-of-the-world/"
+response <- requests$get(url)
+response$status_code
+```
+
+On vérifie que le code de statut HTTP est 200 (ce qui signifie succès). Si ce n’est pas le cas, il faudrait gérer l’erreur (par ex. arrêter si 404 ou autre). Ici, le code retourné est 200, donc la page a été téléchargée avec succès.
+
+Le contenu HTML brut est accessible via `response$text` (ou `response$content` en format binaire). Nous allons maintenant le parser.
+
+## Parsing et extraction des données du HTML
+
+On crée une instance de **BeautifulSoup** à partir du texte HTML, en spécifiant le parser HTML à utiliser (ici le parser par défaut `'html.parser'` suffira) :
+
+```{r}
+page_html <- response$text                         # le HTML sous forme de texte
+soup <- bs4$BeautifulSoup(page_html, "html.parser")  # création de l'objet BeautifulSoup
+```
+
+Maintenant, analysons la structure de la page pour trouver les données qui nous intéressent. En inspectant le HTML (manuellement ou via les outils de développement d’un navigateur), on constate que la table des pays est un tableau HTML où chaque ligne (`<tr>`) contient : le rang, le nom du pays, la population, et la région. 
+
+Nous allons utiliser BeautifulSoup pour trouver toutes les lignes de ce tableau, puis extraire le texte de chaque cellule.
+
+```{r}
+# Trouver toutes les lignes du tableau
+rows <- soup$find_all("tr")
+rows <- py_to_r(builtins$list(rows))
+length(rows)
+```
+
+Il y a 235 éléments `<tr>` sur la page (ce qui correspond aux en-têtes plus les 234 lignes de pays y compris les dépendances). Les premières lignes sont probablement l’en-tête du tableau. Confirmons le contenu de la première ligne :
+
+```{r}
+first_row <- rows[[1]]
+first_row$get_text()
+```
+
+En effet, la première ligne contient "Country | Population (2025) | Region", c’est l’en-tête. Nous allons donc ignorer cette ligne et traiter les suivantes.
+
+Pour chaque ligne suivante, on veut récupérer les colonnes. Toujours grâce à BeautifulSoup, on peut trouver tous les éléments `<td>` de la ligne, puis extraire leur texte :
+
+```{r}
+# Initialiser des vecteurs R pour stocker les données
+ranks <- c()
+countries <- c()
+populations <- c()
+regions <- c()
+
+for (i in seq_along(rows)) {
+  
+  # Ignorer la première ligne
+  if (i == 1) next
+  
+  row_object <- rows[[i]]
+  
+  # Récupérer les éléments <td> (objet Python)
+  cells_python <- row_object$find_all("td")
+  
+  # Convertir l'objet Python en liste R
+  cells_list <- py_to_r(builtins$list(cells_python))
+  
+  # Utiliser vapply pour obtenir un vecteur de caractères
+  cell_values <- vapply(cells_list, function(cell) cell$get_text(), FUN.VALUE = character(1))
+  
+  # Ajouter chaque valeur aux vecteurs correspondants
+  ranks <- c(ranks, as.integer(cell_values[1]))
+  countries <- c(countries, cell_values[2])
+  populations <- c(populations, as.numeric(gsub(",", "", cell_values[3])))
+  regions <- c(regions, cell_values[4])
+}
+
+# Vérifier les résultats
+print(head(ranks))
+print(head(countries))
+```
+
+Dans cette boucle, pour chaque ligne de données (en ignorant la ligne d’en-tête) :
+- On récupère l’objet correspondant à la ligne et on extrait les cellules `<td>` via `row_object$find_all("td")`,
+- La liste retournée (objet Python) est convertie en liste R avec `py_to_r(builtins$list(cells_python))`,
+- On applique ensuite `vapply` sur la liste pour utiliser `get_text()` sur chaque cellule et obtenir un vecteur de caractères,
+Ce vecteur (`cell_values`) contient successivement les valeurs suivantes: rang, pays, population et région,
+- Finalement, on ajoute chaque valeur aux vecteurs R préalablement initialisés.
+On convertit le rang en entier (`as.integer(cell_values[1])`) et la population en numérique (après suppression des virgules par `gsub(",", "", cell_values[3])`).
+
+Après cette boucle, nous avons quatre vecteurs R de même longueur contenant respectivement le rang, le nom du pays, sa population et sa région.
+
+Créons maintenant un data frame R à partir de ces vecteurs, pour avoir une structure tabulaire facile à manipuler :
+
+```{r}
+pop_df <- data.frame(
+  Rank = ranks,
+  Country = countries,
+  Population = populations,
+  Region = regions
+)
+# Aperçu des premières lignes du data frame
+head(pop_df)
+```
+
+Nous avons maintenant dans **pop_df** la liste des pays et leurs populations 2025 (selon Worldometers). Ce data frame a été construit entièrement en R, à partir de données extraites en Python – c’est l’interopérabilité en action. Notons que reticulate a converti sans problème nos chaînes de caractères Python en vecteurs R et que nous avons obtenu un data frame R classique.
+
+## Traitement et visualisation des données en R
+
+À présent que les données sont dans R, on peut les manipuler comme n’importe quel data frame. Par exemple, on peut facilement trier les pays par population, calculer des totaux, faire des filtres, etc., en utilisant les outils R habituels.
+
+Pour rester dans notre objectif, nous souhaitons visualiser les 10 pays les plus peuplés. Comme les données sont déjà classées par rang (dans l’ordre décroissant de population), il nous suffit de prendre les 10 premières lignes de **pop_df**.
+
+```{r}
+top10 <- pop_df[1:10, ]
+top10[, c("Country", "Population")]
+```
+
+On voit bien nos 10 pays les plus peuplés et leurs populations. Pour finir, traçons un petit graphique pour illustrer ces données. On peut utiliser la base R ou **ggplot2**. Pour la simplicité de ce document, utilisons un graphique de base R (barplot) :
+
+```{r}
+# Préparer les données du graphique
+pops <- top10$Population
+names(pops) <- top10$Country
+
+# Réaliser un barplot horizontal des 10 populations (échelle en milliards)
+barplot(sort(pops), horiz = TRUE, las = 1,
+        xlab = "Population (nombre d'habitants)",
+        main = "Top 10 des populations mondiales (2025)")
+```
+
+**_Graphique : Les 10 pays les plus peuplés au monde en 2025, d’après les données scrapées depuis Worldometers._**
+
+Dans ce graphique, on visualise bien que l’Inde et la Chine dépassent largement les autres pays en population (plus de 1,4 milliard chacun), tandis que les États-Unis arrivent en 3e position avec environ 347 millions d’habitants, suivis de l’Indonésie, etc. Ce résultat provient d’un flux de travail combiné : **Python a servi à extraire les données dynamiques du web, et R a pris le relais pour la mise en forme et la visualisation.**
+
+Ainsi, cet exemple illustre de façon concrète comment utiliser **reticulate** dans un scénario réel :
+
+- Nous avons configuré l’environnement Python depuis R et importé les modules requis,
+
+- Nous avons exécuté des appels HTTP et du parsing HTML en Python depuis R,
+
+- Nous avons converti les données extraites en structures R (data frame),
+
+- Enfin, nous avons exploité ces données avec les outils familiers de R.
+
+Le tout sans jamais quitter la session R, et en profitant de la puissance de Python là où c’était le plus adapté (le web scraping, via requests/BeautifulSoup).

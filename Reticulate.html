@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+
+  <!-- Viewport responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+  <!-- Métadonnées (auteur, date, etc.) générées par Pandoc/Bookdown -->
+      <meta name="author" content="Albert ZINABA &amp; Papa Amadou NIANG" />
+            <meta name="description" content="This is a minimal example of using the bookdown package to write a book. The HTML output format for this example is bookdown::gitbook, set in the _output.yml file." />
+  
+  <!-- Titre de la page -->
+  <title>Le package reticulate : R et Python</title>
+
+  <!-- Feuille de style principale -->
+  <link href="style.css" rel="stylesheet" />
+
+  <!-- Font Awesome, Google Fonts, etc. -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Styles Pandoc (coloration syntaxique, etc.) -->
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+
+  <!-- Insertion des CSS spécifiés dans le YAML R Markdown -->
+      <link rel="stylesheet" href="style.css" />
+  
+  <!-- Inclusions éventuelles -->
+      <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+      <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+      <link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+      <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+      <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+      <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+      <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+      <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+      <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+      <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+      <script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+      <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+      <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+      <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+  
+  <!-- MathJax si nécessaire -->
+  </head>
+
+<body>
+  <!-- Contenu avant le corps -->
+  
+  <!-- Structure globale -->
+  <div class="book">
+
+    <!-- Barre latérale -->
+    <nav class="book-sidebar">
+      <div class="book-brand">
+        <a href="./">Le package reticulate : R et Python</a>
+      </div>
+
+      <div class="book-chapters">
+        <div class="chapters-header">
+                      Table des matières
+                  </div>
+                  <ul>
+            <ul>
+            <li><a href="#introduction-à-reticulate-et-son-rôle-dans-lécosystème-r" id="toc-introduction-à-reticulate-et-son-rôle-dans-lécosystème-r">Introduction à <strong>reticulate</strong> et son rôle dans l’écosystème R</a>
+            <ul>
+            <li><a href="#pourquoi-r-et-python-ensemble" id="toc-pourquoi-r-et-python-ensemble"><span class="toc-section-number">0.1</span> Pourquoi R et Python ensemble ?</a></li>
+            <li><a href="#place-dans-lécosystème-r" id="toc-place-dans-lécosystème-r"><span class="toc-section-number">0.2</span> Place dans l’écosystème R</a></li>
+            </ul></li>
+            <li><a href="#installation-et-configuration-de-reticulate" id="toc-installation-et-configuration-de-reticulate"><span class="toc-section-number">1</span> Installation et configuration de <strong>reticulate</strong></a>
+            <ul>
+            <li><a href="#installation-du-package-reticulate" id="toc-installation-du-package-reticulate"><span class="toc-section-number">1.1</span> Installation du package <strong>reticulate</strong></a></li>
+            <li><a href="#disposer-dun-interpréteur-python" id="toc-disposer-dun-interpréteur-python"><span class="toc-section-number">1.2</span> Disposer d’un interpréteur Python</a></li>
+            </ul></li>
+            <li><a href="#fonctionnalités-principales-de-reticulate" id="toc-fonctionnalités-principales-de-reticulate"><span class="toc-section-number">2</span> Fonctionnalités principales de <strong>reticulate</strong></a>
+            <ul>
+            <li><a href="#appeler-des-fonctions-python-depuis-r" id="toc-appeler-des-fonctions-python-depuis-r"><span class="toc-section-number">2.1</span> Appeler des fonctions Python depuis R</a></li>
+            <li><a href="#conversion-automatique-des-types-de-données" id="toc-conversion-automatique-des-types-de-données"><span class="toc-section-number">2.2</span> Conversion automatique des types de données</a></li>
+            <li><a href="#échange-de-variables-entre-r-et-python" id="toc-échange-de-variables-entre-r-et-python"><span class="toc-section-number">2.3</span> Échange de variables entre R et Python</a></li>
+            <li><a href="#exécution-de-scripts-python-et-sessions-interactives" id="toc-exécution-de-scripts-python-et-sessions-interactives"><span class="toc-section-number">2.4</span> Exécution de scripts Python et sessions interactives</a></li>
+            <li><a href="#interopérabilité-avancée-et-limitations" id="toc-interopérabilité-avancée-et-limitations"><span class="toc-section-number">2.5</span> Interopérabilité avancée et limitations</a></li>
+            </ul></li>
+            <li><a href="#avantages-de-reticulate-et-cas-dusage-typiques" id="toc-avantages-de-reticulate-et-cas-dusage-typiques"><span class="toc-section-number">3</span> Avantages de <strong>reticulate</strong> et cas d’usage typiques</a></li>
+            <li><a href="#exemple-pratique-scraping-web" id="toc-exemple-pratique-scraping-web"><span class="toc-section-number">4</span> Exemple pratique : Scraping web</a>
+            <ul>
+            <li><a href="#préparation-de-lenvironnement-python-dans-r" id="toc-préparation-de-lenvironnement-python-dans-r"><span class="toc-section-number">4.1</span> Préparation de l’environnement Python dans R</a></li>
+            <li><a href="#récupération-du-contenu-html-de-la-page-cible" id="toc-récupération-du-contenu-html-de-la-page-cible"><span class="toc-section-number">4.2</span> Récupération du contenu HTML de la page cible</a></li>
+            <li><a href="#parsing-et-extraction-des-données-du-html" id="toc-parsing-et-extraction-des-données-du-html"><span class="toc-section-number">4.3</span> Parsing et extraction des données du HTML</a></li>
+            <li><a href="#traitement-et-visualisation-des-données-en-r" id="toc-traitement-et-visualisation-des-données-en-r"><span class="toc-section-number">4.4</span> Traitement et visualisation des données en R</a></li>
+            </ul></li>
+            <li><a href="#exemple-cas-du-package-rgee" id="toc-exemple-cas-du-package-rgee"><span class="toc-section-number">5</span> Exemple : Cas du package <strong><code>{rgee}</code></strong></a>
+            <ul>
+            <li><a href="#how-does-rgee-work" id="toc-how-does-rgee-work"><span class="toc-section-number">5.1</span> How does rgee work?</a></li>
+            <li><a href="#installation" id="toc-installation"><span class="toc-section-number">5.2</span> Installation</a></li>
+            <li><a href="#lets-play-with-some-precipitation-values" id="toc-lets-play-with-some-precipitation-values"><span class="toc-section-number">5.3</span> Let’s play with some precipitation values</a></li>
+            <li><a href="#créer-une-animation-ndvi" id="toc-créer-une-animation-ndvi"><span class="toc-section-number">5.4</span> Créer une animation NDVI</a></li>
+            </ul></li>
+            <li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+            <li><a href="#references" id="toc-references">References</a></li>
+            </ul>
+          </ul>
+              </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main class="book-main">
+      <!-- En-tête avec titre à gauche et image à droite -->
+      <div class="book-header">
+        <div class="header-title-img">
+                      <h1 class="title">Le package reticulate : R et Python</h1>
+                    <img src="reticulated_python.png" alt="Logo ou image" class="header-image" />
+        </div>
+        <div class="book-info">
+                      <span class="book-author">Albert ZINABA &amp; Papa Amadou NIANG</span>
+                                <span class="book-date">17 avril 2025</span>
+                  </div>
+      </div>
+
+      <!-- Contenu du chapitre -->
+      <div id="bookdown-container" class="book-content">
+        <div id="introduction-à-reticulate-et-son-rôle-dans-lécosystème-r" class="section level1 unnumbered hasAnchor">
+        <h1 class="unnumbered hasAnchor">Introduction à <strong>reticulate</strong> et son rôle dans l’écosystème R<a href="#introduction-à-reticulate-et-son-rôle-dans-lécosystème-r" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>Le package <strong>reticulate</strong> est un outil qui permet d’appeler du code Python directement depuis R, créant ainsi un pont entre les deux langages. Comme le décrit sa documentation officielle, <em>« The package enables you to reticulate Python code into R, creating a new breed of project that weaves together the two languages »</em>. En d’autres termes, <strong>reticulate</strong> fournit une panoplie d’outils pour faire interagir R et Python de manière fluide au sein d’une même session R. Ceci ouvre la voie à une <strong>interopérabilité complète</strong> entre ces deux écosystèmes de programmation, permettant aux utilisateurs de combiner les points forts de chacun.</p>
+        <div id="pourquoi-r-et-python-ensemble" class="section level2 hasAnchor" number="0.1">
+        <h2 class="hasAnchor"><span class="header-section-number">0.1</span> Pourquoi R et Python ensemble ?<a href="#pourquoi-r-et-python-ensemble" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>R est réputé pour ses capacités statistiques et de visualisation, tandis que Python excelle dans des domaines comme le web scraping, le machine learning ou l’automatisation. Plutôt que de choisir l’un ou l’autre, <strong>reticulate</strong> offre la possibilité d’utiliser <strong>simultanément R et Python</strong> dans un même projet. Par exemple, un analyste R peut exploiter une librairie Python inexistante en R sans quitter son environnement R. De même, des données manipulées en R peuvent être passées à une fonction Python pour un traitement spécifique, puis les résultats ramenés en R. Ce genre d’intégration était autrefois fastidieux (il fallait écrire des fichiers intermédiaires, utiliser des APIs externes ou des appels système), mais <strong>reticulate</strong> simplifie radicalement le processus en intégrant un <em>interpréteur Python “vivant”</em> à l’intérieur de R.</p>
+        </div>
+        <div id="place-dans-lécosystème-r" class="section level2 hasAnchor" number="0.2">
+        <h2 class="hasAnchor"><span class="header-section-number">0.2</span> Place dans l’écosystème R<a href="#place-dans-lécosystème-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Reticulate a été développé par RStudio (désormais Posit) et s’est imposé comme la solution de référence pour la collaboration entre R et Python. Il est à la base de nombreuses autres initiatives d’intégration, par exemple : les documents R Markdown peuvent inclure des chunks de code Python grâce à reticulate, et des packages R comme <strong>keras</strong> ou <strong>tensorflow</strong> (interfaces R pour ces frameworks de deep learning) utilisent <strong>reticulate</strong> en coulisses pour appeler les bibliothèques Python correspondantes. En somme, <strong>reticulate</strong> est devenu un composant clé pour tous ceux qui souhaitent un workflow bilingue R-Python sans couture.</p>
+        <!--chapter:end:index.Rmd-->
+        </div>
+        </div>
+        <div id="installation-et-configuration-de-reticulate" class="section level1 hasAnchor" number="1">
+        <h1 class="hasAnchor"><span class="header-section-number">1</span> Installation et configuration de <strong>reticulate</strong><a href="#installation-et-configuration-de-reticulate" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>Avant de pouvoir utiliser <strong>reticulate</strong>, il faut bien sûr l’installer et s’assurer qu’une installation de Python est disponible sur votre système.</p>
+        <div id="installation-du-package-reticulate" class="section level2 hasAnchor" number="1.1">
+        <h2 class="hasAnchor"><span class="header-section-number">1.1</span> Installation du package <strong>reticulate</strong><a href="#installation-du-package-reticulate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Le package étant disponible sur CRAN, son installation est classique :</p>
+        <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;reticulate&quot;</span>)  <span class="co"># Installe reticulate depuis le CRAN</span></span></code></pre></div>
+        <p>Une fois installé, chargez-le dans votre session R :</p>
+        <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span></code></pre></div>
+        <p>Cela suffit pour installer <strong>reticulate</strong> côté R. Cependant, <strong>reticulate</strong> interagit avec Python, il faut donc disposer d’un interpréteur Python (version 3 de préférence). <strong>Reticulate ne contient pas Python en lui-même</strong>, mais offre des outils pour installer ou utiliser une distribution Python.</p>
+        </div>
+        <div id="disposer-dun-interpréteur-python" class="section level2 hasAnchor" number="1.2">
+        <h2 class="hasAnchor"><span class="header-section-number">1.2</span> Disposer d’un interpréteur Python<a href="#disposer-dun-interpréteur-python" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Il y a plusieurs manières de configurer Python pour <strong>reticulate</strong> :</p>
+        <ul>
+        <li><p><strong>Utiliser une installation Python existante :</strong> Si Python est déjà installé sur votre machine (par exemple Python 3 installé globalement ou via Anaconda), <strong>reticulate</strong> peut le détecter automatiquement. Vous pouvez vérifier quelle version de Python est trouvée par défaut avec <code>py_config()</code> après avoir chargé reticulate. Si vous avez plusieurs versions de Python, <strong>reticulate</strong> choisira généralement la première disponible dans le PATH, ou un environnement spécifique s’il a été configuré (voir ci-dessous).</p></li>
+        <li><p><strong>Spécifier explicitement un interpréteur ou un environnement :</strong> Vous pouvez indiquer à <strong>reticulate</strong> quel Python utiliser. Par exemple, pour pointer vers un exécutable Python précis, on utilise <code>use_python("/chemin/vers/python")</code> (par exemple <code>use_python("/usr/bin/python3")</code> sous Linux) <strong>avant</strong> d’appeler toute fonction Python. De même, si vous souhaitez utiliser un environnement virtuel ou Conda particulier, reticulate propose <code>use_virtualenv("nom_env")</code> pour un environnement virtuel <strong>virtualenv</strong> ou <code>use_condaenv("nom_env")</code> pour un environnement <strong>conda</strong>. Par exemple :</p></li>
+        </ul>
+        <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">use_condaenv</span>(<span class="st">&quot;r-reticulate&quot;</span>)  <span class="co"># Sélectionne l’environnement conda nommé &quot;r-reticulate&quot;</span></span></code></pre></div>
+        <p>Ces commandes doivent être exécutées juste après le <code>library(reticulate)</code> et avant d’utiliser Python. Vous pouvez aussi définir la variable d’environnement <code>RETICULATE_PYTHON</code> dans votre <code>.Renviron</code> ou <code>.Rprofile</code> pour qu’une certaine installation de Python soit toujours utilisée par défaut.</p>
+        <ul>
+        <li><strong>Installer une distribution Python légère via reticulate :</strong> Si vous n’avez pas Python ou souhaitez un environnement isolé, reticulate peut installer <strong>Miniconda</strong> automatiquement. Miniconda est une distribution légère qui gère des environnements <strong>conda</strong>. Avec la fonction <code>install_miniconda()</code>, reticulate télécharge et installe Miniconda pour vous. Par défaut, reticulate créera un environnement conda nommé <strong>“r-reticulate”</strong> (sauf si vous en spécifiez un autre) et y installera l’interpréteur Python. Par exemple :</li>
+        </ul>
+        <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">install_miniconda</span>()</span></code></pre></div>
+        <p>Après cela, l’environnement “r-reticulate” sera disponible et pourra être utilisé. En l’absence d’instructions contraires, <strong>reticulate</strong> utilisera automatiquement cet environnement “r-reticulate” comme Python par défaut. Vous pouvez vérifier la liste des environnements conda disponibles avec <code>conda_list()</code> et voir que “r-reticulate” existe.</p>
+        <p>Une fois Python configuré, vous aurez souvent besoin d’installer des librairies Python supplémentaires (comme <code>pandas</code>, <code>numpy</code>, etc.) pour vos usages. Vous pouvez le faire en dehors de R (par exemple via pip ou conda) ou directement depuis R via <strong>reticulate</strong>. Le package fournit la fonction <code>py_install()</code> pour installer des modules Python directement depuis R. Par exemple :</p>
+        <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">&quot;pandas&quot;</span>)        <span class="co"># installe le package Python &quot;pandas&quot; dans l&#39;environnement utilisé</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">py_install</span>(<span class="fu">c</span>(<span class="st">&quot;numpy&quot;</span>, <span class="st">&quot;matplotlib&quot;</span>), <span class="at">envname =</span> <span class="st">&quot;r-reticulate&quot;</span>)</span></code></pre></div>
+        <p>Selon le cas, <code>py_install()</code> choisira d’utiliser <code>pip</code> ou <code>conda</code> pour l’installation (vous pouvez forcer le mode avec l’argument <code>method = "pip"</code> ou <code>"conda"</code>). Il existe aussi des fonctions dédiées comme <code>conda_install()</code> ou <code>virtualenv_install()</code> si vous gérez spécifiquement ces types d’environnements.</p>
+        <p>En résumé, l’installation de <strong>reticulate</strong> est simple côté R, et il faut ensuite s’assurer que Python est accessible. La solution recommandée pour débuter est souvent d’utiliser <strong>Miniconda</strong> via <code>install_miniconda()</code>, car cela garantit un environnement Python propre, géré par R, sans interférer avec d’autres installations Python sur votre système. Une fois cette étape faite, <strong>reticulate</strong> est prêt à être utilisé.</p>
+        <!--chapter:end:01-intro.Rmd-->
+        </div>
+        </div>
+        <div id="fonctionnalités-principales-de-reticulate" class="section level1 hasAnchor" number="2">
+        <h1 class="hasAnchor"><span class="header-section-number">2</span> Fonctionnalités principales de <strong>reticulate</strong><a href="#fonctionnalités-principales-de-reticulate" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>Une fois configuré, <strong>reticulate</strong> permet une véritable <strong>interopérabilité R-Python</strong>. Voici les principales fonctionnalités offertes et comment les utiliser.</p>
+        <div id="appeler-des-fonctions-python-depuis-r" class="section level2 hasAnchor" number="2.1">
+        <h2 class="hasAnchor"><span class="header-section-number">2.1</span> Appeler des fonctions Python depuis R<a href="#appeler-des-fonctions-python-depuis-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>La fonctionnalité de base de <strong>reticulate</strong> est d’appeler des modules, fonctions ou classes Python comme si c’étaient des objets R. Pour ce faire, on utilise généralement la fonction <code>import()</code> de <strong>reticulate</strong> afin de charger un module Python. Cette fonction fonctionne de façon analogue à l’instruction <code>import</code> en Python, mais elle renvoie un objet R représentant le module Python importé.</p>
+        <p>Par exemple, pour importer le module Python <strong>math</strong> et utiliser sa fonction <code>sqrt</code> depuis R :</p>
+        <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>math <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;math&quot;</span>)       <span class="co"># importe le module Python &quot;math&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>math<span class="sc">$</span><span class="fu">sqrt</span>(<span class="dv">9</span>)                <span class="co"># appelle math.sqrt(9) en Python</span></span></code></pre></div>
+        <pre><code>## [1] 3</code></pre>
+        <p>Ici, <code>math</code> est un objet R qui référence le module Python. On peut appeler la fonction <code>sqrt</code> avec la syntaxe <code>$</code> comme s’il s’agissait d’une liste ou d’un objet R, mais en réalité l’appel est exécuté par l’interpréteur Python en arrière-plan. <strong>Reticulate</strong> gère automatiquement le passage de l’argument (<code>9</code> de R vers Python) et le retour du résultat (<code>3</code> de Python vers R).</p>
+        <p>On peut de la même manière importer des <strong>packages Python</strong> plus complexes. Par exemple, importons le package <strong>numpy</strong> (couramment utilisé pour le calcul numérique en Python) et utilisons-le :</p>
+        <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>np <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;numpy&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>arr <span class="ot">&lt;-</span> np<span class="sc">$</span><span class="fu">array</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>))    <span class="co"># crée un numpy array à partir d’un vecteur R</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>np<span class="sc">$</span><span class="fu">mean</span>(arr)                     <span class="co"># calcule la moyenne via numpy</span></span></code></pre></div>
+        <pre><code>## [1] 2.5</code></pre>
+        <p>Dans cet exemple, le vecteur R <code>c(1,2,3,4)</code> a été converti en un tableau numpy, puis la fonction <code>mean</code> de numpy a opéré dessus. <strong>Reticulate</strong> rend ces interactions quasi transparentes. En fait, <strong>lorsqu’on appelle Python depuis R, les types de données R sont convertis automatiquement en types Python équivalents, et vice-versa lors du retour</strong>.</p>
+        </div>
+        <div id="conversion-automatique-des-types-de-données" class="section level2 hasAnchor" number="2.2">
+        <h2 class="hasAnchor"><span class="header-section-number">2.2</span> Conversion automatique des types de données<a href="#conversion-automatique-des-types-de-données" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Ce mécanisme de conversion de type est central dans <strong>reticulate</strong>, car il permet d’échanger des données entre R et Python sans effort manuel la plupart du temps. Le tableau ci-dessous résume quelques conversions automatiques courantes effectuées par reticulate :</p>
+        <table>
+        <colgroup>
+        <col width="28%" />
+        <col width="30%" />
+        <col width="40%" />
+        </colgroup>
+        <thead>
+        <tr class="header">
+        <th>Type R</th>
+        <th>Converti en type Python</th>
+        <th>Exemple (R → Python)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="odd">
+        <td>Vecteur atomique (1 élément)</td>
+        <td>Scalaire Python</td>
+        <td><code>42</code> (numérique R) devient <code>42</code> (int/float Python)</td>
+        </tr>
+        <tr class="even">
+        <td>Vecteur atomique (plusieurs éléments) ou liste non nommée</td>
+        <td><strong>list</strong> Python</td>
+        <td><code>c(1, 2, 3)</code> (vecteur R) devient <code>[1, 2, 3]</code> (list Python)</td>
+        </tr>
+        <tr class="odd">
+        <td>Liste nommée</td>
+        <td><strong>dict</strong> Python</td>
+        <td><code>list(a=1, b=2)</code> devient <code>{'a': 1, 'b': 2}</code></td>
+        </tr>
+        <tr class="even">
+        <td>Matrice ou tableau (<em>matrix/array</em>)</td>
+        <td><strong>numpy.ndarray</strong></td>
+        <td><code>matrix(1:4, ncol=2)</code> devient un ndarray 2x2</td>
+        </tr>
+        <tr class="odd">
+        <td>Data frame</td>
+        <td><strong>pandas.DataFrame</strong></td>
+        <td><code>data.frame(x=1:3, y=c("a","b","c"))</code> devient un DataFrame pandas</td>
+        </tr>
+        <tr class="even">
+        <td>Fonction R</td>
+        <td><strong>function</strong> Python (appelable)</td>
+        <td><code>function(x) x+1</code> devient une fonction Python équivalente</td>
+        </tr>
+        <tr class="odd">
+        <td><code>NULL</code>, <code>TRUE</code>, <code>FALSE</code></td>
+        <td><code>None</code>, <code>True</code>, <code>False</code></td>
+        <td><code>NULL</code> (R) devient <code>None</code> (Python), etc.</td>
+        </tr>
+        </tbody>
+        </table>
+        <p><em>Tableau : Correspondances automatiques de quelques types R ↔︎ Python avec reticulate.</em>
+        Lorsqu’une valeur Python d’un type inconnu (classe personnalisée) est renvoyée vers R, <strong>reticulate</strong> ne la convertit pas en un type R arbitraire mais fournit une <strong>référence</strong> à l’objet Python. Vous pourrez alors manipuler cet objet en R (appeler ses méthodes, accéder à ses attributs) comme s’il s’agissait d’une instance R, tant que l’objet Python sous-jacent existe.</p>
+        <p>Il est également possible de forcer des conversions ou de faire des conversions manuelles si besoin, via par exemple les fonctions <code>r_to_py()</code> (convertir un objet R en objet Python explicitement) et <code>py_to_r()</code> (l’inverse). Dans la grande majorité des cas, reticulate gère tout cela automatiquement, mais ces fonctions peuvent être utiles pour affiner le comportement, notamment si on souhaite désactiver la conversion automatique sur un objet (on peut importer un module avec <code>convert = FALSE</code> pour obtenir des objets Python “bruts” manipulables manuellement).</p>
+        </div>
+        <div id="échange-de-variables-entre-r-et-python" class="section level2 hasAnchor" number="2.3">
+        <h2 class="hasAnchor"><span class="header-section-number">2.3</span> Échange de variables entre R et Python<a href="#échange-de-variables-entre-r-et-python" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>En plus d’appeler directement des fonctions, <strong>reticulate</strong> permet de partager des variables entre les deux langages. Deux approches existent :</p>
+        <ul>
+        <li><strong>Utiliser le pseudo-objet <code>py</code> en R</strong> : Toutes les variables Python créées lors d’appels via reticulate sont accessibles en R via l’objet spécial <code>py</code>. Par exemple, si en Python on assigne une valeur à une variable nommée <code>foo</code>, on pourra y accéder en R avec <code>py$foo</code>. Inversement, côté Python, un objet spécial <code>r</code> permet d’accéder aux objets R. Par exemple, <code>r.bar</code> en Python fera référence à la variable R nommée <code>bar</code>.</li>
+        </ul>
+        <p>Pour illustrer, on peut exécuter du code Python arbitraire avec <code>py_run_string()</code> ou <code>py_run_file()</code>. Supposons qu’on veuille exécuter un petit script Python qui utilise une variable R :</p>
+        <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">42</span>  <span class="co"># une variable R</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">py_run_string</span>(<span class="st">&quot;y = r.x + 1&quot;</span>)  <span class="co"># exécute du Python: y = x de R + 1</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>py<span class="sc">$</span>y</span></code></pre></div>
+        <pre><code>## [1] 43</code></pre>
+        <p>Dans ce snippet, on a utilisé <code>r.x</code> dans le code Python pour accéder à la variable R <code>x</code>. Le script Python a créé une variable <code>y</code>, qu’on retrouve ensuite en R via <code>py$y</code>. Ce mécanisme est très pratique pour orchestrer des échanges complexes sans avoir à gérer manuellement des fichiers ou des sorties : tout se passe en mémoire partagée.</p>
+        <ul>
+        <li><strong>Sourcing de code Python avec retour de variables</strong> : Une autre manière est d’utiliser <code>source_python("script.py")</code> pour exécuter un fichier Python. Toutes les fonctions et classes définies dans ce fichier deviennent directement disponibles en R comme si c’étaient des fonctions R. Par exemple, si le fichier <code>script.py</code> contient une fonction <code>def foo(x): return x*2</code>, alors après <code>source_python("script.py")</code>, on pourra appeler <code>foo(21)</code> dans R et obtenir 42 en résultat. De même, les variables globales créées dans le script Python pourront être accessibles via <code>py$...</code> en R. Le <code>source_python()</code> agit en quelque sorte comme le <code>source()</code> de R, mais pour Python.</li>
+        </ul>
+        </div>
+        <div id="exécution-de-scripts-python-et-sessions-interactives" class="section level2 hasAnchor" number="2.4">
+        <h2 class="hasAnchor"><span class="header-section-number">2.4</span> Exécution de scripts Python et sessions interactives<a href="#exécution-de-scripts-python-et-sessions-interactives" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Outre <code>source_python()</code> et <code>py_run_string()</code>, reticulate offre d’autres outils pour exécuter du code Python :</p>
+        <ul>
+        <li><p><strong><code>py_run_file("fichier.py")</code></strong> : similaire à <code>source_python()</code>, à la différence qu’il ne crée pas de fonctions R. Il exécute le script Python donné et retourne un dictionnaire contenant les variables globales du script. C’est utile si l’on souhaite isoler l’exécution et récupérer manuellement certains résultats.</p></li>
+        <li><p><strong>Python interactif dans la console R</strong> : La fonction <code>repl_python()</code> ouvre un interpréteur Python interactif <em>au sein</em> de la session R. Vous vous retrouvez alors avec une invite Python (<code>&gt;&gt;&gt;</code>) dans la console, comme si vous étiez dans un terminal Python classique, mais toujours dans RStudio ou votre R console. Vous pouvez y taper des commandes Python interactives. Pour revenir à R, il suffit de taper <code>exit</code> ou <code>quit()</code>. Ce mode est pratique pour tester rapidement du code Python sans quitter R. De plus, les objets créés sont persistants dans la session <strong>reticulate</strong>, donc accessibles ensuite via <code>py$</code> en R une fois que vous quittez le REPL Python.</p></li>
+        <li><p><strong>R Markdown et notebooks</strong> : Bien que ce ne soit pas une fonction du package en soi, il faut noter que reticulate s’intègre avec R Markdown. Vous pouvez inclure des chunks Python (<code>{python} ...</code>) dans un document R Markdown, et grâce à reticulate, ces chunks pourront partager leurs variables avec les chunks R. Par exemple, une variable Python définie dans un chunk pourra être récupérée dans un chunk R suivant via <code>py$var</code>. Cette interopérabilité rend les notebooks multi-langages très puissants pour la data science.</p></li>
+        </ul>
+        </div>
+        <div id="interopérabilité-avancée-et-limitations" class="section level2 hasAnchor" number="2.5">
+        <h2 class="hasAnchor"><span class="header-section-number">2.5</span> Interopérabilité avancée et limitations<a href="#interopérabilité-avancée-et-limitations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p><strong>Reticulate</strong> supporte la plupart des cas d’usage courants, mais il est utile de connaître quelques détails supplémentaires :</p>
+        <ul>
+        <li><p><strong>Appels de méthodes et attributs Python</strong> : Si vous importez une classe ou créez un objet Python en R, vous pouvez appeler ses méthodes via <code>$</code>. Par exemple <code>obj$method(arg)</code> appellera <code>obj.method(arg)</code> en Python. Les attributs se récupèrent de la même façon (<code>obj$attribute</code>). S’il y a un nom qui entre en conflit avec un nom de fonction R (par exemple une méthode nommée <code>print</code>), vous pouvez utiliser la syntaxe <code>obj[[\"print\"]]()</code>.</p></li>
+        <li><p><strong>Conversion fine des types</strong> : Par défaut, la conversion automatique peut être désactivée en important un module avec <code>convert = FALSE</code>. Dans ce cas, les objets Python retournés restent des références Python (classe <code>py_object</code>). On peut les manipuler seulement via Python. Il faut alors utiliser <code>py_to_r()</code> manuellement pour convertir un résultat quand on le souhaite. Cette approche est utile si la conversion automatique pose problème (cas de types non standard ou lorsque l’on souhaite vraiment garder l’objet Python natif).</p></li>
+        <li><p><strong>Limitations</strong> : Tout ce qui est fait via <strong>reticulate</strong> s’exécute dans un seul interpréteur Python par session R. Cela signifie que vous <strong>ne pouvez pas</strong> simultanément faire tourner deux environnements Python isolés dans un même processus R. Par exemple, vous ne pouvez pas importer deux versions différentes d’une même librairie Python dans une session R donnée. De plus, certaines fonctionnalités Python qui requièrent un vrai interpréteur interactif (par ex. les boucles d’événements async, ou des interfaces graphiques tkinter, etc.) pourraient ne pas fonctionner correctement à travers reticulate, surtout dans un environnement non interactif. Néanmoins, pour l’écrasante majorité des bibliothèques Python orientées calcul, traitement de données, web, etc., <strong>reticulate</strong> fonctionne parfaitement.</p></li>
+        </ul>
+        <p>En résumé, <strong>reticulate</strong> rend possible l’utilisation conjointe de R et Python de façon transparente. Après avoir configuré Python, vous pouvez importer des modules, appeler des fonctions, passer des données d’un langage à l’autre, exécuter des scripts complets, et même interagir avec Python directement dans R. Nous allons maintenant voir quels avantages pratiques on peut en tirer et présenter des cas d’usage typiques.</p>
+        <!--chapter:end:02-fonc.Rmd-->
+        </div>
+        </div>
+        <div id="avantages-de-reticulate-et-cas-dusage-typiques" class="section level1 hasAnchor" number="3">
+        <h1 class="hasAnchor"><span class="header-section-number">3</span> Avantages de <strong>reticulate</strong> et cas d’usage typiques<a href="#avantages-de-reticulate-et-cas-dusage-typiques" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>L’utilisation de <strong>reticulate</strong> présente plusieurs avantages clés pour les data scientists, analystes et développeurs qui travaillent avec R :</p>
+        <ul>
+        <li><p><strong>Combiner le meilleur de deux mondes :</strong> Le principal atout est de pouvoir exploiter <strong>simultanément les bibliothèques R et Python</strong>. Vous n’êtes plus limité par la disponibilité d’une fonction dans un seul langage. Par exemple, si une bibliothèque de machine learning n’existe qu’en Python, vous pouvez l’utiliser dans votre code R via reticulate. À l’inverse, un utilisateur Python peut bénéficier des outils de visualisation de R sans réécrire son code, en passant par un script R utilisant reticulate.</p></li>
+        <li><p><strong>Réutilisation de code existant :</strong> Dans un contexte professionnel, il n’est pas rare d’avoir des équipes mixtes ou un héritage de code dans différents langages. Avec reticulate, une équipe R peut appeler directement les fonctions écrites par une équipe Python (et vice-versa, bien que reticulate soit principalement pensé du point de vue R appelant Python). Cela évite de <strong>redévelopper des solutions déjà fonctionnelles</strong> dans l’autre langage. Par exemple, si un collègue a un script Python de web scraping efficace, vous pouvez l’invoquer depuis R et récupérer les données sans tout recoder en R.</p></li>
+        <li><p><strong>Interopérabilité dans les rapports et applications :</strong> Grâce à reticulate, il est possible de créer des rapports <strong>R Markdown</strong> ou des applications <strong>Shiny</strong> qui utilisent Python en coulisse. Par exemple, un rapport peut comporter une section d’analyse faite en Python (via un chunk Python) et une section de visualisation en R, le tout s’exécutant de manière cohérente. De même, Shiny (application web en R) peut appeler du code Python pour certaines fonctionnalités (par exemple pour utiliser une librairie d’intelligence artificielle en Python), et afficher le résultat dans l’interface R Shiny. Tout cela se fait sans que l’utilisateur final ne se rende compte du mélange des langages.</p></li>
+        <li><p><strong>Accès aux écosystèmes de packages complets :</strong> R et Python ont chacun un écosystème riche de milliers de packages. En combinant les deux, vous avez accès à <strong>un éventail incroyablement large de fonctionnalités</strong>. Par exemple, vous pouvez utiliser <strong>scikit-learn</strong> (Python) pour entraîner un modèle de machine learning, puis utiliser <strong>ggplot2</strong> (R) pour visualiser les résultats, le tout dans un même script. Un autre cas fréquent est d’utiliser <strong>pandas</strong> (Python) pour certaines manipulations de données complexes ou du web scraping, puis <strong>dplyr</strong> ou <strong>data.table</strong> (R) pour d’autres manipulations plus aisées en R.</p></li>
+        <li><p><strong>Support par la communauté et maintenance active :</strong> Le package <strong>reticulate</strong> étant largement utilisé, il est activement maintenu (au moment de rédiger, version ~1.42 en 2025) et bénéficie d’une communauté conséquente. On trouve de nombreux exemples en ligne et retours d’expérience sur son utilisation, ce qui aide à résoudre d’éventuels problèmes. De plus, comme mentionné, de nombreux packages R populaires (TensorFlow, Keras, spaCy pour R, etc.) reposent sur reticulate, ce qui témoigne de sa robustesse.</p></li>
+        </ul>
+        <p>En somme, <strong>reticulate</strong> s’avère très utile dans tous les scénarios où R et Python peuvent se compléter. Pour illustrer concrètement son utilisation, nous allons maintenant présenter une application pratique de bout en bout.</p>
+        <!--chapter:end:03-avan.Rmd-->
+        </div>
+        <div id="exemple-pratique-scraping-web" class="section level1 hasAnchor" number="4">
+        <h1 class="hasAnchor"><span class="header-section-number">4</span> Exemple pratique : Scraping web<a href="#exemple-pratique-scraping-web" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>Pour bien comprendre comment utiliser <strong>reticulate</strong> pas à pas, prenons un exemple concret et réaliste. Supposons que nous souhaitions extraire des données à partir d’un site web en “temps réel” (c’est-à-dire des données mises à jour dynamiquement). Le site <a href="https://www.worldometers.info"><strong>Worldometers</strong></a> fournit par exemple des statistiques mondiales en direct. Nous allons montrer comment, grâce à <strong>reticulate</strong>, on peut écrire un script R qui utilise Python pour faire du <strong>web scraping</strong> (extraction de données web) et ensuite exploiter ces données dans R (par exemple pour les visualiser).</p>
+        <p><strong>Cas d’étude :</strong> Récupérer la liste des pays du monde et leur population actuelle depuis Worldometers, puis afficher les 10 pays les plus peuplés dans un graphique, en combinant Python et R.</p>
+        <p>Pour cela, nous aurons besoin côté Python des librairies <strong>requests</strong> (pour télécharger le contenu HTML de la page) et <strong>BeautifulSoup</strong> (module <strong>bs4</strong>, pour parser le HTML et extraire les données). Côté R, nous utiliserons les fonctions de <strong>reticulate</strong> pour orchestrer Python, et les fonctions R de base pour manipuler et visualiser les données.</p>
+        <div id="préparation-de-lenvironnement-python-dans-r" class="section level2 hasAnchor" number="4.1">
+        <h2 class="hasAnchor"><span class="header-section-number">4.1</span> Préparation de l’environnement Python dans R<a href="#préparation-de-lenvironnement-python-dans-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Tout d’abord, assurons-nous que les librairies Python nécessaires sont disponibles. Si ce n’est pas déjà fait, on peut installer <code>requests</code> et <code>beautifulsoup4</code> via <strong>reticulate</strong>. Nous supposons ici que vous avez configuré un environnement Python (par exemple via <code>install_miniconda()</code> comme vu précédemment). Dans le doute, installons ces packages :</p>
+        <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">py_install</span>(<span class="fu">c</span>(<span class="st">&quot;requests&quot;</span>, <span class="st">&quot;beautifulsoup4&quot;</span>))</span></code></pre></div>
+        <p>Cette commande va installer les deux librairies Python dans l’environnement actuellement utilisé par reticulate. (Si elles sont déjà installées, elle n’aura pas d’effet ou vous pouvez la sauter.)</p>
+        <p>Ensuite, importons ces modules Python pour pouvoir les utiliser :</p>
+        <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>requests <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;requests&quot;</span>)      <span class="co"># importe la librairie requests</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>bs4      <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;bs4&quot;</span>)           <span class="co"># importe BeautifulSoup (bs4)</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>builtins <span class="ot">&lt;-</span> <span class="fu">import_builtins</span>()       <span class="co"># importe les fonctions de base de python</span></span></code></pre></div>
+        <p>Ici, <code>requests</code>, <code>bs4</code> et <code>builtins</code> deviennent trois objets R représentant les modules Python correspondants. On pourra appeler leurs fonctions avec la syntaxe <code>$</code>. Par exemple, <code>requests$get()</code> pour faire une requête web, <code>bs4$BeautifulSoup()</code> pour parser du HTML, ou <code>builtins$len()</code> pour utiliser des fonctions de base du langage Python.</p>
+        </div>
+        <div id="récupération-du-contenu-html-de-la-page-cible" class="section level2 hasAnchor" number="4.2">
+        <h2 class="hasAnchor"><span class="header-section-number">4.2</span> Récupération du contenu HTML de la page cible<a href="#récupération-du-contenu-html-de-la-page-cible" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Identifions l’URL à scraper. Sur Worldometers, il existe une page listant les pays et leur population : <a href="https://www.worldometers.info/geography/countries-of-the-world/"><strong>link to the page</strong></a>. C’est cette page que nous allons télécharger.</p>
+        <p>On utilise <code>requests</code> pour faire une requête GET et obtenir le HTML :</p>
+        <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">&quot;https://www.worldometers.info/geography/countries-of-the-world/&quot;</span></span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>response <span class="ot">&lt;-</span> requests<span class="sc">$</span><span class="fu">get</span>(url)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>response<span class="sc">$</span>status_code</span></code></pre></div>
+        <pre><code>## [1] 200</code></pre>
+        <p>On vérifie que le code de statut HTTP est 200 (ce qui signifie succès). Si ce n’est pas le cas, il faudrait gérer l’erreur (par ex. arrêter si 404 ou autre). Ici, le code retourné est 200, donc la page a été téléchargée avec succès.</p>
+        <p>Le contenu HTML brut est accessible via <code>response$text</code> (ou <code>response$content</code> en format binaire). Nous allons maintenant le parser.</p>
+        </div>
+        <div id="parsing-et-extraction-des-données-du-html" class="section level2 hasAnchor" number="4.3">
+        <h2 class="hasAnchor"><span class="header-section-number">4.3</span> Parsing et extraction des données du HTML<a href="#parsing-et-extraction-des-données-du-html" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>On crée une instance de <strong>BeautifulSoup</strong> à partir du texte HTML, en spécifiant le parser HTML à utiliser (ici le parser par défaut <code>'html.parser'</code> suffira) :</p>
+        <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>page_html <span class="ot">&lt;-</span> response<span class="sc">$</span>text                         <span class="co"># le HTML sous forme de texte</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>soup <span class="ot">&lt;-</span> bs4<span class="sc">$</span><span class="fu">BeautifulSoup</span>(page_html, <span class="st">&quot;html.parser&quot;</span>)  <span class="co"># création de l&#39;objet BeautifulSoup</span></span></code></pre></div>
+        <p>Maintenant, analysons la structure de la page pour trouver les données qui nous intéressent. En inspectant le HTML (manuellement ou via les outils de développement d’un navigateur), on constate que la table des pays est un tableau HTML où chaque ligne (<code>&lt;tr&gt;</code>) contient : le rang, le nom du pays, la population, et la région.</p>
+        <p>Nous allons utiliser BeautifulSoup pour trouver toutes les lignes de ce tableau, puis extraire le texte de chaque cellule.</p>
+        <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Trouver toutes les lignes du tableau</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>rows <span class="ot">&lt;-</span> soup<span class="sc">$</span><span class="fu">find_all</span>(<span class="st">&quot;tr&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a>rows <span class="ot">&lt;-</span> <span class="fu">py_to_r</span>(builtins<span class="sc">$</span><span class="fu">list</span>(rows))</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="fu">length</span>(rows)</span></code></pre></div>
+        <pre><code>## [1] 235</code></pre>
+        <p>Il y a 235 éléments <code>&lt;tr&gt;</code> sur la page (ce qui correspond aux en-têtes plus les 234 lignes de pays y compris les dépendances). Les premières lignes sont probablement l’en-tête du tableau. Confirmons le contenu de la première ligne :</p>
+        <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>first_row <span class="ot">&lt;-</span> rows[[<span class="dv">1</span>]]</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>first_row<span class="sc">$</span><span class="fu">get_text</span>()</span></code></pre></div>
+        <pre><code>## [1] &quot;  #     Country     Population(2025)     Region     &quot;</code></pre>
+        <p>En effet, la première ligne contient “Country | Population (2025) | Region”, c’est l’en-tête. Nous allons donc ignorer cette ligne et traiter les suivantes.</p>
+        <p>Pour chaque ligne suivante, on veut récupérer les colonnes. Toujours grâce à BeautifulSoup, on peut trouver tous les éléments <code>&lt;td&gt;</code> de la ligne, puis extraire leur texte :</p>
+        <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="co"># Initialiser des vecteurs R pour stocker les données</span></span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>ranks <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>countries <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>populations <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>regions <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(rows)) {</span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>  </span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="co"># Ignorer la première ligne</span></span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) <span class="cf">next</span></span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  </span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>  row_object <span class="ot">&lt;-</span> rows[[i]]</span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a>  </span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a>  <span class="co"># Récupérer les éléments &lt;td&gt; (objet Python)</span></span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a>  cells_python <span class="ot">&lt;-</span> row_object<span class="sc">$</span><span class="fu">find_all</span>(<span class="st">&quot;td&quot;</span>)</span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a>  </span>
+<span id="cb21-17"><a href="#cb21-17" tabindex="-1"></a>  <span class="co"># Convertir l&#39;objet Python en liste R</span></span>
+<span id="cb21-18"><a href="#cb21-18" tabindex="-1"></a>  cells_list <span class="ot">&lt;-</span> <span class="fu">py_to_r</span>(builtins<span class="sc">$</span><span class="fu">list</span>(cells_python))</span>
+<span id="cb21-19"><a href="#cb21-19" tabindex="-1"></a>  </span>
+<span id="cb21-20"><a href="#cb21-20" tabindex="-1"></a>  <span class="co"># Utiliser vapply pour obtenir un vecteur de caractères</span></span>
+<span id="cb21-21"><a href="#cb21-21" tabindex="-1"></a>  cell_values <span class="ot">&lt;-</span> <span class="fu">vapply</span>(cells_list, <span class="cf">function</span>(cell) cell<span class="sc">$</span><span class="fu">get_text</span>(), <span class="at">FUN.VALUE =</span> <span class="fu">character</span>(<span class="dv">1</span>))</span>
+<span id="cb21-22"><a href="#cb21-22" tabindex="-1"></a>  </span>
+<span id="cb21-23"><a href="#cb21-23" tabindex="-1"></a>  <span class="co"># Ajouter chaque valeur aux vecteurs correspondants</span></span>
+<span id="cb21-24"><a href="#cb21-24" tabindex="-1"></a>  ranks <span class="ot">&lt;-</span> <span class="fu">c</span>(ranks, <span class="fu">as.integer</span>(cell_values[<span class="dv">1</span>]))</span>
+<span id="cb21-25"><a href="#cb21-25" tabindex="-1"></a>  countries <span class="ot">&lt;-</span> <span class="fu">c</span>(countries, cell_values[<span class="dv">2</span>])</span>
+<span id="cb21-26"><a href="#cb21-26" tabindex="-1"></a>  populations <span class="ot">&lt;-</span> <span class="fu">c</span>(populations, <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">&quot;,&quot;</span>, <span class="st">&quot;&quot;</span>, cell_values[<span class="dv">3</span>])))</span>
+<span id="cb21-27"><a href="#cb21-27" tabindex="-1"></a>  regions <span class="ot">&lt;-</span> <span class="fu">c</span>(regions, cell_values[<span class="dv">4</span>])</span>
+<span id="cb21-28"><a href="#cb21-28" tabindex="-1"></a>}</span>
+<span id="cb21-29"><a href="#cb21-29" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" tabindex="-1"></a><span class="co"># Vérifier les résultats</span></span>
+<span id="cb21-31"><a href="#cb21-31" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(ranks))</span></code></pre></div>
+        <pre><code>## [1] 1 2 3 4 5 6</code></pre>
+        <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(countries))</span></code></pre></div>
+        <pre><code>## [1] &quot; India &quot;         &quot; China &quot;         &quot; United States &quot; &quot; Indonesia &quot;    
+## [5] &quot; Pakistan &quot;      &quot; Nigeria &quot;</code></pre>
+        <p>Dans cette boucle, pour chaque ligne de données (en ignorant la ligne d’en-tête) :
+        - On récupère l’objet correspondant à la ligne et on extrait les cellules <code>&lt;td&gt;</code> via <code>row_object$find_all("td")</code>,
+        - La liste retournée (objet Python) est convertie en liste R avec <code>py_to_r(builtins$list(cells_python))</code>,
+        - On applique ensuite <code>vapply</code> sur la liste pour utiliser <code>get_text()</code> sur chaque cellule et obtenir un vecteur de caractères,
+        Ce vecteur (<code>cell_values</code>) contient successivement les valeurs suivantes: rang, pays, population et région,
+        - Finalement, on ajoute chaque valeur aux vecteurs R préalablement initialisés.
+        On convertit le rang en entier (<code>as.integer(cell_values[1])</code>) et la population en numérique (après suppression des virgules par <code>gsub(",", "", cell_values[3])</code>).</p>
+        <p>Après cette boucle, nous avons quatre vecteurs R de même longueur contenant respectivement le rang, le nom du pays, sa population et sa région.</p>
+        <p>Créons maintenant un data frame R à partir de ces vecteurs, pour avoir une structure tabulaire facile à manipuler :</p>
+        <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>pop_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  <span class="at">Rank =</span> ranks,</span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="at">Country =</span> countries,</span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>  <span class="at">Population =</span> populations,</span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a>  <span class="at">Region =</span> regions</span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a>)</span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a><span class="co"># Aperçu des premières lignes du data frame</span></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a><span class="fu">head</span>(pop_df)</span></code></pre></div>
+        <pre><code>##   Rank         Country Population             Region
+## 1    1          India  1463865525              Asia 
+## 2    2          China  1416096094              Asia 
+## 3    3  United States   347275807  Northern America 
+## 4    4      Indonesia   285721236              Asia 
+## 5    5       Pakistan   255219554              Asia 
+## 6    6        Nigeria   237527782            Africa</code></pre>
+        <p>Nous avons maintenant dans <strong>pop_df</strong> la liste des pays et leurs populations 2025 (selon Worldometers). Ce data frame a été construit entièrement en R, à partir de données extraites en Python – c’est l’interopérabilité en action. Notons que reticulate a converti sans problème nos chaînes de caractères Python en vecteurs R et que nous avons obtenu un data frame R classique.</p>
+        </div>
+        <div id="traitement-et-visualisation-des-données-en-r" class="section level2 hasAnchor" number="4.4">
+        <h2 class="hasAnchor"><span class="header-section-number">4.4</span> Traitement et visualisation des données en R<a href="#traitement-et-visualisation-des-données-en-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>À présent que les données sont dans R, on peut les manipuler comme n’importe quel data frame. Par exemple, on peut facilement trier les pays par population, calculer des totaux, faire des filtres, etc., en utilisant les outils R habituels.</p>
+        <p>Pour rester dans notre objectif, nous souhaitons visualiser les 10 pays les plus peuplés. Comme les données sont déjà classées par rang (dans l’ordre décroissant de population), il nous suffit de prendre les 10 premières lignes de <strong>pop_df</strong>.</p>
+        <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>top10 <span class="ot">&lt;-</span> pop_df[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]</span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>top10[, <span class="fu">c</span>(<span class="st">&quot;Country&quot;</span>, <span class="st">&quot;Population&quot;</span>)]</span></code></pre></div>
+        <pre><code>##            Country Population
+## 1           India  1463865525
+## 2           China  1416096094
+## 3   United States   347275807
+## 4       Indonesia   285721236
+## 5        Pakistan   255219554
+## 6         Nigeria   237527782
+## 7          Brazil   212812405
+## 8      Bangladesh   175686899
+## 9          Russia   143997393
+## 10       Ethiopia   135472051</code></pre>
+        <p>On voit bien nos 10 pays les plus peuplés et leurs populations. Pour finir, traçons un petit graphique pour illustrer ces données. On peut utiliser la base R ou <strong>ggplot2</strong>. Pour la simplicité de ce document, utilisons un graphique de base R (barplot) :</p>
+        <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="co"># Préparer les données du graphique</span></span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a>pops <span class="ot">&lt;-</span> top10<span class="sc">$</span>Population</span>
+<span id="cb29-3"><a href="#cb29-3" tabindex="-1"></a><span class="fu">names</span>(pops) <span class="ot">&lt;-</span> top10<span class="sc">$</span>Country</span>
+<span id="cb29-4"><a href="#cb29-4" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" tabindex="-1"></a><span class="co"># Réaliser un barplot horizontal des 10 populations (échelle en milliards)</span></span>
+<span id="cb29-6"><a href="#cb29-6" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">sort</span>(pops), <span class="at">horiz =</span> <span class="cn">TRUE</span>, <span class="at">las =</span> <span class="dv">1</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Population (nombre d&#39;habitants)&quot;</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">&quot;Top 10 des populations mondiales (2025)&quot;</span>)</span></code></pre></div>
+        <p><img src="Reticulate_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+        <p><strong><em>Graphique : Les 10 pays les plus peuplés au monde en 2025, d’après les données scrapées depuis Worldometers.</em></strong></p>
+        <p>Dans ce graphique, on visualise bien que l’Inde et la Chine dépassent largement les autres pays en population (plus de 1,4 milliard chacun), tandis que les États-Unis arrivent en 3e position avec environ 347 millions d’habitants, suivis de l’Indonésie, etc. Ce résultat provient d’un flux de travail combiné : <strong>Python a servi à extraire les données dynamiques du web, et R a pris le relais pour la mise en forme et la visualisation.</strong></p>
+        <p>Ainsi, cet exemple illustre de façon concrète comment utiliser <strong>reticulate</strong> dans un scénario réel :</p>
+        <ul>
+        <li><p>Nous avons configuré l’environnement Python depuis R et importé les modules requis,</p></li>
+        <li><p>Nous avons exécuté des appels HTTP et du parsing HTML en Python depuis R,</p></li>
+        <li><p>Nous avons converti les données extraites en structures R (data frame),</p></li>
+        <li><p>Enfin, nous avons exploité ces données avec les outils familiers de R.</p></li>
+        </ul>
+        <p>Le tout sans jamais quitter la session R, et en profitant de la puissance de Python là où c’était le plus adapté (le web scraping, via requests/BeautifulSoup).</p>
+        <!--chapter:end:04-ex1.Rmd-->
+        </div>
+        </div>
+        <div id="exemple-cas-du-package-rgee" class="section level1 hasAnchor" number="5">
+        <h1 class="hasAnchor"><span class="header-section-number">5</span> Exemple : Cas du package <strong><code>{rgee}</code></strong><a href="#exemple-cas-du-package-rgee" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <div id="how-does-rgee-work" class="section level2 hasAnchor" number="5.1">
+        <h2 class="hasAnchor"><span class="header-section-number">5.1</span> How does rgee work?<a href="#how-does-rgee-work" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p><code>rgee</code> n’est pas une API Earth Engine native comme le client <code>JavaScript</code> ou <code>Python</code>. Développer une API Earth Engine de A à Z engendrerait une charge de maintenance trop importante, d’autant plus que l’API est en cours de développement. Alors, comment exécuter Earth Engine avec R ? La réponse est <a href="https://rstudio.github.io/reticulate/"><strong>reticulate</strong></a>. Lorsqu’une requête Earth Engine est créée dans R, reticulate la traduit en Python et la transmet à l’API Python Earth Engine, qui la convertit au format JSON. Enfin, la requête est reçue par la plateforme GEE via une API REST Web. La réponse suit le même chemin, mais en sens inverse.</p>
+        <p><img src="rgee.png" width="716" /> <strong><em>workflow</em></strong></p>
+        </div>
+        <div id="installation" class="section level2 hasAnchor" number="5.2">
+        <h2 class="hasAnchor"><span class="header-section-number">5.2</span> Installation<a href="#installation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Installez depuis CRAN avec :</p>
+        <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;rgee&quot;</span>)</span></code></pre></div>
+        <p>Installez les versions de développement depuis GitHub avec :</p>
+        <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;r-spatial/rgee&quot;</span>)</span></code></pre></div>
+        <p>De plus, <code>rgee</code> dépend de numpy et d’earthengine-api et nécessite l’interface de ligne de commande gcloud pour authentifier les nouveaux utilisateurs.</p>
+        <p>Créez et enregistrez un projet Google Cloud. Suivez les instructions d’accès à Earth Engine.</p>
+        <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;googledrive&quot;</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb32-4"><a href="#cb32-4" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" tabindex="-1"></a><span class="co"># Get the username</span></span>
+<span id="cb32-6"><a href="#cb32-6" tabindex="-1"></a>HOME <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;HOME&quot;</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" tabindex="-1"></a><span class="co"># 1. Install miniconda</span></span>
+<span id="cb32-9"><a href="#cb32-9" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">install_miniconda</span>()</span>
+<span id="cb32-10"><a href="#cb32-10" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" tabindex="-1"></a><span class="co"># 2. Install Google Cloud SDK</span></span>
+<span id="cb32-12"><a href="#cb32-12" tabindex="-1"></a><span class="fu">system</span>(<span class="st">&quot;curl -sSL https://sdk.cloud.google.com | bash&quot;</span>)</span>
+<span id="cb32-13"><a href="#cb32-13" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" tabindex="-1"></a><span class="co"># 3 Set global parameters</span></span>
+<span id="cb32-15"><a href="#cb32-15" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="st">&quot;RETICULATE_PYTHON&quot;</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s/.local/share/r-miniconda/bin/python3&quot;</span>, HOME))</span>
+<span id="cb32-16"><a href="#cb32-16" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="st">&quot;EARTHENGINE_GCLOUD&quot;</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s/google-cloud-sdk/bin/&quot;</span>, HOME))</span>
+<span id="cb32-17"><a href="#cb32-17" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" tabindex="-1"></a><span class="co"># 4 Install rgee Python dependencies</span></span>
+<span id="cb32-19"><a href="#cb32-19" tabindex="-1"></a><span class="fu">ee_install</span>() </span>
+<span id="cb32-20"><a href="#cb32-20" tabindex="-1"></a></span>
+<span id="cb32-21"><a href="#cb32-21" tabindex="-1"></a><span class="co"># 5. Authenticate and initialize your Earth Engine session</span></span>
+<span id="cb32-22"><a href="#cb32-22" tabindex="-1"></a><span class="co"># Replace &quot;my-project-id&quot; with the ID of the Cloud project you created above </span></span>
+<span id="cb32-23"><a href="#cb32-23" tabindex="-1"></a><span class="fu">ee_Initialize</span>(<span class="at">project =</span> <span class="st">&quot;my-project-id&quot;</span>) </span></code></pre></div>
+        <p>Integrate rgee with geemap :</p>
+        <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a><span class="co"># 1. Initialize the Python Environment</span></span>
+<span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a><span class="fu">ee_Initialize</span>(<span class="at">project =</span> <span class="st">&quot;my-project-id&quot;</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a><span class="co"># 2. Install geemap in the same Python ENV that use rgee</span></span>
+<span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a><span class="fu">py_install</span>(<span class="st">&quot;geemap&quot;</span>)</span>
+<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>gm <span class="ot">&lt;-</span> <span class="fu">import</span>(<span class="st">&quot;geemap&quot;</span>)</span></code></pre></div>
+        </div>
+        <div id="lets-play-with-some-precipitation-values" class="section level2 hasAnchor" number="5.3">
+        <h2 class="hasAnchor"><span class="header-section-number">5.3</span> Let’s play with some precipitation values<a href="#lets-play-with-some-precipitation-values" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Installez et chargez les packages <code>tidyverse</code> et <code>sf</code> de R puis initialisez l’API R d’Earth Engine.</p>
+        <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb34-2"><a href="#cb34-2" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb34-3"><a href="#cb34-3" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb34-4"><a href="#cb34-4" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" tabindex="-1"></a><span class="fu">ee_Initialize</span>(<span class="at">project =</span> <span class="st">&quot;my-project-id&quot;</span>)</span></code></pre></div>
+        <p>Lisez le shapefile <code>nc</code> qui contient les délimitation de notre zone de travail:</p>
+        <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a>nc <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;sf&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+        <p>Nous utiliserons l’ ensemble de données <code>Terraclimate</code> pour extraire les précipitations mensuelles (Pr) de 2001</p>
+        <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" tabindex="-1"></a>terraclimate <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&quot;IDAHO_EPSCOR/TERRACLIMATE&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&quot;2001-01-01&quot;</span>, <span class="st">&quot;2002-01-01&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(x) x<span class="sc">$</span><span class="fu">select</span>(<span class="st">&quot;pr&quot;</span>)) <span class="sc">%&gt;%</span> <span class="co"># Select only precipitation bands</span></span>
+<span id="cb36-4"><a href="#cb36-4" tabindex="-1"></a>  ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">toBands</span>() <span class="sc">%&gt;%</span> <span class="co"># from imagecollection to image</span></span>
+<span id="cb36-5"><a href="#cb36-5" tabindex="-1"></a>  ee<span class="sc">$</span>Image<span class="sc">$</span><span class="fu">rename</span>(<span class="fu">sprintf</span>(<span class="st">&quot;PP_%02d&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)) <span class="co"># rename the bands of an image</span></span></code></pre></div>
+        <p><code>ee_extract</code>vous aidera à extraire les valeurs mensuelles de précipitations de la <code>Terraclimate ImageCollection</code>. <code>ee_extract</code> fonctionne de manière similaire à <code>raster::extract</code>, il vous suffit de définir : l’objet ImageCollection (x), la géométrie (y) et une fonction pour résumer les valeurs (fun).</p>
+        <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a>ee_nc_rain <span class="ot">&lt;-</span> <span class="fu">ee_extract</span>(<span class="at">x =</span> terraclimate, <span class="at">y =</span> nc[<span class="st">&quot;NAME&quot;</span>], <span class="at">sf =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+        <p>Utilisez ggplot2 pour générer un magnifique tracé statique !</p>
+        <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" tabindex="-1"></a>ee_nc_rain <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>NAME, <span class="at">names_to =</span> <span class="st">&quot;month&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;pr&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" tabindex="-1"></a>  <span class="fu">mutate</span>(month, <span class="at">month=</span><span class="fu">gsub</span>(<span class="st">&quot;PP_&quot;</span>, <span class="st">&quot;&quot;</span>, month)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> pr, <span class="at">group =</span> NAME, <span class="at">color =</span> pr)) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Month&quot;</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Precipitation (mm)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+        <p><img src="graph.png" width="530" /></p>
+        </div>
+        <div id="créer-une-animation-ndvi" class="section level2 hasAnchor" number="5.4">
+        <h2 class="hasAnchor"><span class="header-section-number">5.4</span> Créer une animation NDVI<a href="#créer-une-animation-ndvi" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+        <p>Installez et chargez <code>sf</code>. Après cela, initialisez l’API Earth Engine R :</p>
+        <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">library</span>(magick)</span>
+<span id="cb39-2"><a href="#cb39-2" tabindex="-1"></a><span class="fu">library</span>(rgee)</span>
+<span id="cb39-3"><a href="#cb39-3" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb39-4"><a href="#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="#cb39-5" tabindex="-1"></a><span class="fu">ee_Initialize</span>(<span class="at">project =</span> <span class="st">&quot;my-project-id&quot;</span>)</span></code></pre></div>
+        <p>Définissez les limites régionales des images d’animation et un masque pour découper les données NDVI.</p>
+        <div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" tabindex="-1"></a>mask <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;shp/arequipa.shp&quot;</span>, <span class="at">package =</span> <span class="st">&quot;rgee&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" tabindex="-1"></a>  <span class="fu">st_read</span>(<span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" tabindex="-1"></a>  <span class="fu">sf_as_ee</span>()</span>
+<span id="cb40-4"><a href="#cb40-4" tabindex="-1"></a>region <span class="ot">&lt;-</span> mask<span class="sc">$</span><span class="fu">geometry</span>()<span class="sc">$</span><span class="fu">bounds</span>()</span></code></pre></div>
+        <p>Récupérez l’ensemble de données <code>MODIS Terra Vegetation Indices 16-Day Global 1km ee.ImageCollection</code>, puis sélectionnez la bande NDVI.</p>
+        <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a>col <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(<span class="st">&#39;MODIS/006/MOD13A2&#39;</span>)<span class="sc">$</span><span class="fu">select</span>(<span class="st">&#39;NDVI&#39;</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" tabindex="-1"></a>Regrouper les images par date composite</span>
+<span id="cb41-3"><a href="#cb41-3" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" tabindex="-1"></a>col <span class="ot">&lt;-</span> col<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(img) {</span>
+<span id="cb41-5"><a href="#cb41-5" tabindex="-1"></a>  doy <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">Date</span>(img<span class="sc">$</span><span class="fu">get</span>(<span class="st">&#39;system:time_start&#39;</span>))<span class="sc">$</span><span class="fu">getRelative</span>(<span class="st">&#39;day&#39;</span>, <span class="st">&#39;year&#39;</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" tabindex="-1"></a>  img<span class="sc">$</span><span class="fu">set</span>(<span class="st">&#39;doy&#39;</span>, doy)</span>
+<span id="cb41-7"><a href="#cb41-7" tabindex="-1"></a>})</span>
+<span id="cb41-8"><a href="#cb41-8" tabindex="-1"></a>distinctDOY <span class="ot">&lt;-</span> col<span class="sc">$</span><span class="fu">filterDate</span>(<span class="st">&#39;2013-01-01&#39;</span>, <span class="st">&#39;2014-01-01&#39;</span>)</span></code></pre></div>
+        <p>Maintenant, définissons un filtre qui identifie les images de la collection complète qui correspondent au DOY de la collection DOY distincte.</p>
+        <div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" tabindex="-1"></a>filter <span class="ot">&lt;-</span> ee<span class="sc">$</span>Filter<span class="sc">$</span><span class="fu">equals</span>(<span class="at">leftField =</span> <span class="st">&#39;doy&#39;</span>, <span class="at">rightField =</span> <span class="st">&#39;doy&#39;</span>)</span></code></pre></div>
+        <p>Définissez une jointure et convertissez la <code>FeatureCollection</code> résultante en ImageCollection… cela ne vous prendra que 2 lignes de code !</p>
+        <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>join <span class="ot">&lt;-</span> ee<span class="sc">$</span>Join<span class="sc">$</span><span class="fu">saveAll</span>(<span class="st">&#39;doy_matches&#39;</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>joinCol <span class="ot">&lt;-</span> ee<span class="sc">$</span><span class="fu">ImageCollection</span>(join<span class="sc">$</span><span class="fu">apply</span>(distinctDOY, col, filter))</span></code></pre></div>
+        <p>Appliquer une réduction médiane parmi les collections DOY correspondantes.</p>
+        <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>comp <span class="ot">&lt;-</span> joinCol<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(img) {</span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>  doyCol <span class="ot">=</span> ee<span class="sc">$</span>ImageCollection<span class="sc">$</span><span class="fu">fromImages</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>    img<span class="sc">$</span><span class="fu">get</span>(<span class="st">&#39;doy_matches&#39;</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>  )</span>
+<span id="cb44-5"><a href="#cb44-5" tabindex="-1"></a>  doyCol<span class="sc">$</span><span class="fu">reduce</span>(ee<span class="sc">$</span>Reducer<span class="sc">$</span><span class="fu">median</span>())</span>
+<span id="cb44-6"><a href="#cb44-6" tabindex="-1"></a>})</span></code></pre></div>
+        <p>Presque prêt ! mais définissons d’abord les paramètres de visualisation <code>RVB</code>.</p>
+        <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>visParams <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>  <span class="at">min =</span> <span class="fl">0.0</span>,</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>  <span class="at">max =</span> <span class="fl">9000.0</span>,</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>  <span class="at">bands =</span> <span class="st">&quot;NDVI_median&quot;</span>,</span>
+<span id="cb45-5"><a href="#cb45-5" tabindex="-1"></a>  <span class="at">palette =</span> <span class="fu">c</span>(</span>
+<span id="cb45-6"><a href="#cb45-6" tabindex="-1"></a>    <span class="st">&#39;FFFFFF&#39;</span>, <span class="st">&#39;CE7E45&#39;</span>, <span class="st">&#39;DF923D&#39;</span>, <span class="st">&#39;F1B555&#39;</span>, <span class="st">&#39;FCD163&#39;</span>, <span class="st">&#39;99B718&#39;</span>, <span class="st">&#39;74A901&#39;</span>,</span>
+<span id="cb45-7"><a href="#cb45-7" tabindex="-1"></a>    <span class="st">&#39;66A000&#39;</span>, <span class="st">&#39;529400&#39;</span>, <span class="st">&#39;3E8601&#39;</span>, <span class="st">&#39;207401&#39;</span>, <span class="st">&#39;056201&#39;</span>, <span class="st">&#39;004C00&#39;</span>, <span class="st">&#39;023B01&#39;</span>,</span>
+<span id="cb45-8"><a href="#cb45-8" tabindex="-1"></a>    <span class="st">&#39;012E01&#39;</span>, <span class="st">&#39;011D01&#39;</span>, <span class="st">&#39;011301&#39;</span></span>
+<span id="cb45-9"><a href="#cb45-9" tabindex="-1"></a>  )</span>
+<span id="cb45-10"><a href="#cb45-10" tabindex="-1"></a>)</span></code></pre></div>
+        <p>Créez des images de visualisation RVB à utiliser comme images d’animation.</p>
+        <div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>rgbVis <span class="ot">&lt;-</span> comp<span class="sc">$</span><span class="fu">map</span>(<span class="cf">function</span>(img) {</span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>  <span class="fu">do.call</span>(img<span class="sc">$</span>visualize, visParams) <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>    ee<span class="sc">$</span>Image<span class="sc">$</span><span class="fu">clip</span>(mask)</span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>})</span></code></pre></div>
+        <p>Animons ceci. Définissons les paramètres de visualisation GIF.</p>
+        <div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>gifParams <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>  <span class="at">region =</span> region,</span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>  <span class="at">dimensions =</span> <span class="dv">600</span>,</span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>  <span class="at">crs =</span> <span class="st">&#39;EPSG:3857&#39;</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>  <span class="at">framesPerSecond =</span> <span class="dv">10</span></span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a>)</span></code></pre></div>
+        <p>Obtenir les noms des mois :</p>
+        <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>dates_modis_mabbr <span class="ot">&lt;-</span> distinctDOY <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>  ee_get_date_ic <span class="sc">%&gt;%</span> <span class="co"># Get Image Collection dates</span></span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>  <span class="st">&#39;[[&#39;</span>(<span class="st">&quot;time_start&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Select time_start column</span></span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>  lubridate<span class="sc">::</span><span class="fu">month</span>() <span class="sc">%&gt;%</span> <span class="co"># Get the month component of the datetime</span></span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>  <span class="st">&#39;[&#39;</span>(month.abb, .) <span class="co"># subset around month abbreviations</span></span></code></pre></div>
+        <p>Et enfin, utilisez les fonctions ee_utils_gif_* pour rendre l’animation GIF et ajouter du texte.</p>
+        <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" tabindex="-1"></a>animation <span class="ot">&lt;-</span> <span class="fu">ee_utils_gif_creator</span>(rgbVis, gifParams, <span class="at">mode =</span> <span class="st">&quot;wb&quot;</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" tabindex="-1"></a>animation <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" tabindex="-1"></a>  <span class="fu">ee_utils_gif_annotate</span>(</span>
+<span id="cb49-4"><a href="#cb49-4" tabindex="-1"></a>    <span class="at">text =</span> <span class="st">&quot;NDVI: MODIS/006/MOD13A2&quot;</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">15</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" tabindex="-1"></a>    <span class="at">location =</span> <span class="st">&quot;+10+10&quot;</span></span>
+<span id="cb49-7"><a href="#cb49-7" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb49-8"><a href="#cb49-8" tabindex="-1"></a>  <span class="fu">ee_utils_gif_annotate</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" tabindex="-1"></a>    <span class="at">text =</span> dates_modis_mabbr,</span>
+<span id="cb49-10"><a href="#cb49-10" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">30</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" tabindex="-1"></a>    <span class="at">location =</span> <span class="st">&quot;+290+350&quot;</span>,</span>
+<span id="cb49-12"><a href="#cb49-12" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">&quot;white&quot;</span>,</span>
+<span id="cb49-13"><a href="#cb49-13" tabindex="-1"></a>    <span class="at">font =</span> <span class="st">&quot;arial&quot;</span>,</span>
+<span id="cb49-14"><a href="#cb49-14" tabindex="-1"></a>    <span class="at">boxcolor =</span> <span class="st">&quot;#000000&quot;</span></span>
+<span id="cb49-15"><a href="#cb49-15" tabindex="-1"></a>  ) <span class="co"># -&gt; animation_wtxt</span></span>
+<span id="cb49-16"><a href="#cb49-16" tabindex="-1"></a></span>
+<span id="cb49-17"><a href="#cb49-17" tabindex="-1"></a><span class="co"># ee_utils_gif_save(animation_wtxt, path = &quot;raster_as_ee.gif&quot;)</span></span></code></pre></div>
+        <p><img src="img_gif.gif" /></p>
+        <!--chapter:end:05-ex2.Rmd-->
+        </div>
+        </div>
+        <div id="conclusion" class="section level1 unnumbered hasAnchor">
+        <h1 class="unnumbered hasAnchor">Conclusion<a href="#conclusion" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p>Le package <strong>reticulate</strong> constitue une passerelle puissante entre R et Python, rendant obsolète la barrière entre les deux écosystèmes. Grâce à une installation et une configuration relativement simples, il est possible d’appeler des fonctions Python depuis R, d’échanger des données sans effort et d’exécuter du code dans l’un ou l’autre langage de façon interchangeable. Nous avons couvert ses principales fonctionnalités – de l’appel de fonctions Python, aux conversions automatiques de types, en passant par l’exécution de scripts complets – et mis en avant ses avantages dans divers cas d’utilisation.</p>
+        <p>En pratique, <strong>reticulate</strong> permet aux utilisateurs de <strong>tirer parti de la richesse combinée des bibliothèques R et Python</strong>. Que ce soit pour incorporer une librairie Python manquante en R, pour collaborer au sein d’équipes aux compétences variées, ou pour construire des analyses reproductibles multi-langages, reticulate offre une solution élégante et éprouvée. Comme nous l’avons vu avec l’exemple du scraping web, il devient envisageable de réaliser en R des tâches autrefois réservées à Python, tout en bénéficiant immédiatement dans R des résultats obtenus.</p>
+        <p>En résumé, <strong>reticulate</strong> élargit les horizons des utilisateurs de R en leur donnant accès à l’univers Python sans quitter leur environnement de travail. C’est un outil indispensable pour quiconque souhaite unifier des workflows R et Python, et son adoption continue de croître au sein de la communauté des data scientists pour résoudre des problèmes concrets de manière efficace et synergique.</p>
+        <!--chapter:end:06-con.Rmd-->
+        </div>
+        <div id="references" class="section level1 unnumbered hasAnchor">
+        <h1 class="unnumbered hasAnchor">References<a href="#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+        <p><strong>Sources :</strong></p>
+        <ul>
+        <li><p><a href="https://rstudio.github.io/reticulate/"><em>Documentation officielle de reticulate</em></a></p></li>
+        <li><p><a href="https://www.r-bloggers.com/2022/04/getting-started-with-python-using-r-and-reticulate/"><em>Article R-Bloggers sur reticulate</em></a></p></li>
+        <li><p><a href="https://cran.r-project.org/package=reticulate"><em>Page CRAN du package</em></a></p></li>
+        <li><p><a href="https://r-spatial.github.io/rgee/"><em>R Bindings for Calling the Earth Engine API • rgee</em></a></p></li>
+        </ul>
+        <!--chapter:end:07-references.Rmd-->
+        </div>
+      </div>
+
+      <!-- Navigation Bookdown -->
+      <div class="book-navigation">
+                      </div>
+    </main>
+  </div>
+
+  <!-- Contenu après le corps -->
+  
+  <!-- Scripts (MathJax, etc.) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
+
+  <script>
+    // Gestion du repli/dépli des sous-chapitres dans la sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+      const chapters = document.querySelectorAll('.book-chapters .chapter');
+      chapters.forEach(chapter => {
+        // On ne traite que les chapitres ayant un sous-menu
+        if (chapter.querySelector('ul')) {
+          const chapterLink = chapter.querySelector('a');
+          chapterLink.addEventListener('click', function(e) {
+            // Si le clic se fait sur la zone du bouton (à droite)
+            if (e.offsetX > chapterLink.offsetWidth - 30) {
+              e.preventDefault();
+              chapter.classList.toggle('active');
+            }
+          });
+        }
+      });
+
+      // Défilement doux pour les ancres internes
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // Ajout du bouton "Copier" dans chaque bloc de code
+      document.querySelectorAll('pre').forEach(pre => {
+        const button = document.createElement('button');
+        button.className = 'copy-btn';
+        button.textContent = 'Copier';
+        button.addEventListener('click', () => {
+          const codeElement = pre.querySelector('code');
+          if (codeElement) {
+            navigator.clipboard.writeText(codeElement.innerText).then(() => {
+              button.textContent = 'Copié !';
+              setTimeout(() => { button.textContent = 'Copier'; }, 2000);
+            }).catch(err => {
+              console.error('Erreur lors de la copie :', err);
+            });
+          }
+        });
+        pre.appendChild(button);
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# _bookdown.yml
+
+delete_merged_file: true
+
+# Nom du livre (préfixe pour les outputs, ex.: MonLivre.html, MonLivre.pdf...)
+book_filename: "Reticulate"
+
+# Liste des fichiers Rmd à compiler, dans l'ordre
+rmd_files:
+  - index.Rmd
+  - 01-intro.Rmd
+  - 02-fonc.Rmd
+  - 03-avan.Rmd
+  - 04-ex1.Rmd
+  - 05-ex2.Rmd
+  - 06-con.Rmd
+  - 07-references.Rmd
+
+# Langue ou texte pour "Chapter" ou "Chapitre"
+# language:
+  # ui:
+    # chapter_name: "Chapter "

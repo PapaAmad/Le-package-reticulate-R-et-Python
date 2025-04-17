@@ -1,0 +1,11 @@
+# References {-}
+
+**Sources :** 
+
+- [*Documentation officielle de reticulate*](https://rstudio.github.io/reticulate/)
+
+- [*Article R-Bloggers sur reticulate*](https://www.r-bloggers.com/2022/04/getting-started-with-python-using-r-and-reticulate/)
+
+- [*Page CRAN du package*](https://cran.r-project.org/package=reticulate)
+
+- [*R Bindings for Calling the Earth Engine API • rgee*](https://r-spatial.github.io/rgee/)
